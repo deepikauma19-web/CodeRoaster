@@ -72,27 +72,31 @@ export function RoasterMascot() {
     <Box
       position="relative"
       w="full"
-      maxW="400px"
+      maxW="360px"
       mx="auto"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
       <Box
-        position="relative"
+        position={{ base: 'relative', lg: 'absolute' }}
+        top={{ lg: '2%' }}
+        left={{ lg: '-24%' }}
+        w={{ base: 'full', lg: '66%' }}
+        zIndex={1}
         bg="white"
         color="gray.800"
         borderWidth="1px"
         borderColor="border.subtle"
         borderRadius="2xl"
         boxShadow="md"
-        px={4}
-        py={3}
-        mb={4}
+        px={3}
+        py={2}
+        mb={{ base: 3, lg: 0 }}
         _after={{
           content: '""',
           position: 'absolute',
           bottom: '-8px',
-          left: '30%',
+          left: { base: '30%', lg: '78%' },
           w: '16px',
           h: '16px',
           bg: 'white',
@@ -102,7 +106,7 @@ export function RoasterMascot() {
           transform: 'rotate(45deg)',
         }}
       >
-        <Text fontWeight="semibold" aria-live="polite">
+        <Text fontWeight="semibold" fontSize="md" aria-live="polite">
           {hovered ? HOVER_LINE : GREETING}
         </Text>
       </Box>

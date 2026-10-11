@@ -1,5 +1,5 @@
 [project]
-name = "assignment-roaster-backend"
+name = "code-roaster-backend"
 version = "2.0.0"
 requires-python = ">=3.11"
 

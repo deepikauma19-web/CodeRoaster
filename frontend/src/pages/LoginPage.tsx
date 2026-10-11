@@ -103,14 +103,14 @@ export default function LoginPage() {
     return <Navigate to={DEFAULT_POST_LOGIN_PATH} replace />;
 
   return (
-    <PageWrapper maxW="container.xl">
+    <PageWrapper maxW="container.xl" py={{ base: 4, md: 4 }}>
       <CursorGlow />
       <SimpleGrid
         columns={{ base: 1, lg: 2 }}
-        spacing={{ base: 10, lg: 16 }}
+        spacing={{ base: 6, lg: 10 }}
         alignItems="center"
       >
-        <Stack spacing={6}>
+        <Stack spacing={5}>
           <Badge
             alignSelf="flex-start"
             colorScheme="brand"
@@ -127,10 +127,14 @@ export default function LoginPage() {
               🔥
             </Box>
           </Heading>
-          <Text fontSize="xl" fontWeight="semibold" color="accent.fire">
+          <Text
+            fontSize={{ base: "xl", lg: "2xl" }}
+            fontWeight="semibold"
+            color="accent.fire"
+          >
             Un code-a naanga roast pannuvom, nee improve pannu!
           </Text>
-          <Text color="text.muted" fontSize="lg">
+          <Text color="text.muted" fontSize={{ base: "lg", lg: "xl" }}>
             Drop your GitHub repo and get a brutally honest (but helpful) review
             of your code quality, structure, docs, AI best practices and
             security.
@@ -146,8 +150,8 @@ export default function LoginPage() {
         <RoasterMascot />
       </SimpleGrid>
 
-      <Box mt={{ base: 12, md: 16 }}>
-        <Heading as="h2" size="lg" mb={6} textAlign="center">
+      <Box mt={{ base: 8, md: 6 }}>
+        <Heading as="h2" size="lg" mb={4} textAlign="center">
           Roast Examples
         </Heading>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -199,7 +203,7 @@ export default function LoginPage() {
         </SimpleGrid>
       </Box>
 
-      <Box mt={{ base: 14, md: 20 }}>
+      <Box mt={{ base: 10, md: 12 }}>
         <Heading as="h2" size="lg" mb={6} textAlign="center">
           How it works
         </Heading>

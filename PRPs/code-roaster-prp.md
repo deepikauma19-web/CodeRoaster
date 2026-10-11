@@ -1,4 +1,4 @@
-# PRP: Assignment Roaster 2.0
+# PRP: Code Roaster
 
 > Implementation blueprint for parallel agent execution
 
@@ -8,7 +8,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Product** | Assignment Roaster 2.0 |
+| **Product** | Code Roaster |
 | **Type** | SaaS (free) |
 | **Version** | 1.0 |
 | **Created** | 2026-10-10 |
@@ -20,7 +20,7 @@
 
 **Description:** A learner signs in with Gmail and pastes a public GitHub repo URL. The backend fetches the repo, picks the relevant files, runs quick static checks (secrets, README, `.gitignore`, `.env`), and sends everything to OpenAI GPT. The result is a Tanglish roast, a score out of 100 split across 5 categories, and 3–7 actionable tips. Users pick the roast intensity and can share the result as a public card.
 
-**Value Proposition:** AI-dev learners rarely get honest code review. Assignment Roaster gives instant, specific feedback that is fun enough to share, so it spreads by word of mouth and keeps learners coming back to improve their score.
+**Value Proposition:** AI-dev learners rarely get honest code review. Code Roaster gives instant, specific feedback that is fun enough to share, so it spreads by word of mouth and keeps learners coming back to improve their score.
 
 **MVP Scope:**
 - [ ] Google (Gmail) sign-in
@@ -425,4 +425,4 @@ VITE_API_URL=http://localhost:8000
 ## NEXT STEP
 
 Execute with parallel agents:
-/execute-prp PRPs/assignment-roaster-prp.md
+/execute-prp PRPs/code-roaster-prp.md

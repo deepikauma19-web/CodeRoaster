@@ -1,4 +1,4 @@
-# CLAUDE.md - Assignment Roaster 2.0 Project Rules
+# CLAUDE.md - Code Roaster Project Rules
 
 > Project-specific rules for Claude Code. This file is read automatically.
 
@@ -6,7 +6,7 @@
 
 ## Project Overview
 
-**Project Name:** Assignment Roaster 2.0
+**Project Name:** Code Roaster
 **Description:** Paste a public GitHub repo, get your code analysed and roasted in Tanglish (Tamil + English), with a score and tips to improve. Built for people learning AI development.
 **Tech Stack:**
 - Backend: FastAPI + Python 3.11+
@@ -22,7 +22,7 @@
 ## Project Structure
 
 ```
-assignment-roaster/
+code-roaster/
 ├── backend/
 │   ├── app/
 │   │   ├── main.py

@@ -1,4 +1,4 @@
-# INITIAL.md - Assignment Roaster 2.0 Product Definition
+# INITIAL.md - Code Roaster Product Definition
 
 > Paste a public GitHub repo, get your code analysed and roasted in Tanglish (Tamil + English), with a score and tips to improve.
 
@@ -7,10 +7,10 @@
 ## PRODUCT
 
 ### Name
-Assignment Roaster 2.0
+Code Roaster
 
 ### Description
-Assignment Roaster 2.0 is a fun but useful code review tool for people learning AI development. A user signs in with their Gmail account and pastes the URL of a public GitHub repository, usually a course assignment or side project. The app fetches the repo, analyses the code with OpenAI GPT, and returns:
+Code Roaster is a fun but useful code review tool for people learning AI development. A user signs in with their Gmail account and pastes the URL of a public GitHub repository, usually a course assignment or side project. The app fetches the repo, analyses the code with OpenAI GPT, and returns:
 
 - A **Tanglish roast**: a funny, Chennai-style roast in Tamil (Latin script) mixed with English. It roasts the code, never the person.
 - A **score out of 100**, broken down by category: code quality, project structure, documentation, AI/LLM best practices, and security.
@@ -300,5 +300,5 @@ People learning AI development (students, bootcamp learners, self-taught develop
 Then:
 
 ```bash
-/execute-prp PRPs/assignment-roaster-prp.md
+/execute-prp PRPs/code-roaster-prp.md
 ```

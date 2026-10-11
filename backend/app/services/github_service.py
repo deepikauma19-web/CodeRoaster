@@ -187,7 +187,7 @@ def create_github_client() -> httpx.AsyncClient:
     return httpx.AsyncClient(
         timeout=httpx.Timeout(HTTP_TIMEOUT_SECONDS),
         follow_redirects=True,
-        headers={"User-Agent": "assignment-roaster/2.0"},
+        headers={"User-Agent": "code-roaster/2.0"},
         event_hooks={"request": [_enforce_allowed_host]},
     )
 
