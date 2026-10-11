@@ -16,7 +16,7 @@ export function AuthorChip({ firstName, avatarUrl }: AuthorChipProps): JSX.Eleme
       borderRadius="full"
       borderWidth="1px"
       borderColor="border.subtle"
-      bg="whiteAlpha.50"
+      bg="bg.card"
       data-testid="author-chip"
     >
       <Avatar size="xs" name={name} src={avatarUrl ?? undefined} />

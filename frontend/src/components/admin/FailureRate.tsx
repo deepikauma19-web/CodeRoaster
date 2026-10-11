@@ -28,7 +28,7 @@ export function FailureRate({ rate, totalRoasts, isLoading = false }: FailureRat
           size="110px"
           thickness="10px"
           color={colorFor(pct)}
-          trackColor="whiteAlpha.200"
+          trackColor="bg.track"
           isIndeterminate={isLoading}
           aria-label="Failure rate"
         >

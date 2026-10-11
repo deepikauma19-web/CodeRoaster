@@ -30,7 +30,7 @@ export function ScoreBreakdownBars({ breakdown }: ScoreBreakdownBarsProps) {
               colorScheme={band.colorScheme}
               size="sm"
               borderRadius="full"
-              bg="whiteAlpha.200"
+              bg="bg.track"
               aria-label={`${label}: ${value} out of ${CATEGORY_MAX}`}
             />
           </Box>

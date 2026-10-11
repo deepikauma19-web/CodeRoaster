@@ -71,7 +71,7 @@ export function RecentRoasts({ size = 5 }: RecentRoastsProps) {
               borderRadius="xl"
               borderWidth="1px"
               borderColor="border.subtle"
-              bg="whiteAlpha.50"
+              bg="bg.card"
               transition="border-color 0.2s"
               _hover={{ borderColor: 'brand.300' }}
             >

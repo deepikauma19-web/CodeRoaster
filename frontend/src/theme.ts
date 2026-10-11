@@ -1,7 +1,7 @@
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
 const config: ThemeConfig = {
-  initialColorMode: 'dark',
+  initialColorMode: 'light',
   useSystemColorMode: false,
 };
 
@@ -36,9 +36,14 @@ const theme = extendTheme({
   },
   semanticTokens: {
     colors: {
-      'bg.canvas': { default: 'gray.50', _dark: 'ember.bg' },
+      'bg.canvas': { default: '#fff8f2', _dark: 'ember.bg' },
       'bg.surface': { default: 'white', _dark: 'ember.surface' },
-      'border.subtle': { default: 'blackAlpha.200', _dark: 'ember.border' },
+      'bg.card': { default: 'whiteAlpha.900', _dark: 'whiteAlpha.50' },
+      'bg.subtle': { default: 'orange.50', _dark: 'whiteAlpha.100' },
+      'bg.track': { default: 'orange.100', _dark: 'whiteAlpha.200' },
+      'bg.code': { default: 'orange.50', _dark: 'blackAlpha.400' },
+      'bg.header': { default: 'rgba(255, 248, 242, 0.85)', _dark: 'blackAlpha.600' },
+      'border.subtle': { default: 'orange.100', _dark: 'ember.border' },
       'text.muted': { default: 'gray.600', _dark: 'whiteAlpha.700' },
       'accent.fire': { default: 'brand.600', _dark: 'brand.400' },
     },
@@ -51,6 +56,9 @@ const theme = extendTheme({
         minHeight: '100%',
       },
       body: {
+        bgImage:
+          'radial-gradient(circle at 12% 8%, rgba(255, 196, 160, 0.45), transparent 42%), radial-gradient(circle at 88% 12%, rgba(205, 190, 255, 0.40), transparent 40%), radial-gradient(circle at 50% 100%, rgba(255, 224, 235, 0.55), transparent 50%)',
+        bgAttachment: 'fixed',
         WebkitFontSmoothing: 'antialiased',
       },
       '::selection': {

@@ -8,15 +8,21 @@ import {
   SimpleGrid,
   Stack,
   Text,
-} from '@chakra-ui/react';
-import type { IconType } from 'react-icons';
-import { FiAward, FiGithub, FiZap } from 'react-icons/fi';
-import { Navigate } from 'react-router-dom';
-import { AuthSpinner } from '../components/auth/AuthSpinner';
-import { GoogleSignInButton } from '../components/auth/GoogleSignInButton';
-import { AnimatedList, GlassCard, PageWrapper } from '../components/ui';
-import { useAuth } from '../hooks/useAuth';
-import { DEFAULT_POST_LOGIN_PATH } from '../services/authService';
+} from "@chakra-ui/react";
+import type { IconType } from "react-icons";
+import { FiAward, FiGithub, FiZap } from "react-icons/fi";
+import { Navigate } from "react-router-dom";
+import { AuthSpinner } from "../components/auth/AuthSpinner";
+import { GoogleSignInButton } from "../components/auth/GoogleSignInButton";
+import { RoasterMascot } from "../components/mascot";
+import {
+  AnimatedList,
+  CursorGlow,
+  GlassCard,
+  PageWrapper,
+} from "../components/ui";
+import { useAuth } from "../hooks/useAuth";
+import { DEFAULT_POST_LOGIN_PATH } from "../services/authService";
 
 interface HowItWorksStep {
   icon: IconType;
@@ -27,36 +33,52 @@ interface HowItWorksStep {
 const STEPS: HowItWorksStep[] = [
   {
     icon: FiGithub,
-    title: 'Paste your repo',
-    description: 'Public GitHub link podu — assignment, side project, edhuvaa irundhaalum.',
+    title: "Paste your repo",
+    description:
+      "Public GitHub link podu — assignment, side project, edhuvaa irundhaalum.",
   },
   {
     icon: FiZap,
-    title: 'Pick your spice level',
-    description: 'Mild 🌶️, Medium 🌶️🌶️ or Extra Spicy 🌶️🌶️🌶️ — un heart strength-ku yetha maadhiri.',
+    title: "Pick your spice level",
+    description:
+      "Mild 🌶️, Medium 🌶️🌶️ or Extra Spicy 🌶️🌶️🌶️ — un heart strength-ku yetha maadhiri.",
   },
   {
     icon: FiAward,
-    title: 'Get roasted + improve',
-    description: 'Roast, a score out of 100, and actionable tips to level up your code.',
+    title: "Get roasted + improve",
+    description:
+      "Roast, a score out of 100, and actionable tips to level up your code.",
   },
 ];
 
 export default function LoginPage() {
   const { status } = useAuth();
 
-  if (status === 'loading') return <AuthSpinner />;
-  if (status === 'authenticated') return <Navigate to={DEFAULT_POST_LOGIN_PATH} replace />;
+  if (status === "loading") return <AuthSpinner />;
+  if (status === "authenticated")
+    return <Navigate to={DEFAULT_POST_LOGIN_PATH} replace />;
 
   return (
     <PageWrapper maxW="container.xl">
-      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 10, lg: 16 }} alignItems="center">
+      <CursorGlow />
+      <SimpleGrid
+        columns={{ base: 1, lg: 2 }}
+        spacing={{ base: 10, lg: 16 }}
+        alignItems="center"
+      >
         <Stack spacing={6}>
-          <Badge alignSelf="flex-start" colorScheme="brand" variant="subtle" px={3} py={1} borderRadius="full">
+          <Badge
+            alignSelf="flex-start"
+            colorScheme="brand"
+            variant="subtle"
+            px={3}
+            py={1}
+            borderRadius="full"
+          >
             AI code review, but make it spicy
           </Badge>
           <Heading as="h1" size="2xl" lineHeight="1.1">
-            Assignment Roaster 2.0{' '}
+            Assignment Roaster 2.0{" "}
             <Box as="span" role="img" aria-label="fire">
               🔥
             </Box>
@@ -65,10 +87,11 @@ export default function LoginPage() {
             Un code-a naanga roast pannuvom, nee improve pannu!
           </Text>
           <Text color="text.muted" fontSize="lg">
-            Drop your GitHub repo and get a brutally honest (but helpful) review of your code quality,
-            structure, docs, AI best practices and security.
+            Drop your GitHub repo and get a brutally honest (but helpful) review
+            of your code quality, structure, docs, AI best practices and
+            security.
           </Text>
-          <Stack spacing={2} align={{ base: 'stretch', sm: 'flex-start' }}>
+          <Stack spacing={2} align={{ base: "stretch", sm: "flex-start" }}>
             <GoogleSignInButton />
             <Text fontSize="sm" color="text.muted">
               Google login mattum dhaan — no passwords to forget.
@@ -76,6 +99,13 @@ export default function LoginPage() {
           </Stack>
         </Stack>
 
+        <RoasterMascot />
+      </SimpleGrid>
+
+      <Box mt={{ base: 12, md: 16 }} maxW="container.md" mx="auto">
+        <Heading as="h2" size="lg" mb={6} textAlign="center">
+          Sample roast
+        </Heading>
         <GlassCard static aria-label="Sample roast">
           <HStack justify="space-between" mb={4}>
             <HStack spacing={2}>
@@ -89,11 +119,18 @@ export default function LoginPage() {
             </Badge>
           </HStack>
           <Text fontSize="lg" mb={4}>
-            “Bro, <Code>main.py</Code>-la 800 lines-a? Idhu file illa, novel. And that API key in{' '}
-            <Code>config.py</Code>… GitHub-la public-a podra alavukku generous-a irukka? 😭”
+            “Bro, <Code>main.py</Code>-la 800 lines-a? Idhu file illa, novel.
+            And that API key in <Code>config.py</Code>… GitHub-la public-a podra
+            alavukku generous-a irukka? 😭”
           </Text>
           <HStack spacing={4} align="center">
-            <Circle size="56px" bg="brand.500" color="white" fontWeight="bold" fontSize="lg">
+            <Circle
+              size="56px"
+              bg="brand.500"
+              color="white"
+              fontWeight="bold"
+              fontSize="lg"
+            >
               42
             </Circle>
             <Stack spacing={0}>
@@ -104,17 +141,26 @@ export default function LoginPage() {
             </Stack>
           </HStack>
         </GlassCard>
-      </SimpleGrid>
+      </Box>
 
       <Box mt={{ base: 14, md: 20 }}>
         <Heading as="h2" size="lg" mb={6} textAlign="center">
           How it works
         </Heading>
-        <AnimatedList direction={{ base: 'column', md: 'row' }} spacing={6} align="stretch">
+        <AnimatedList
+          direction={{ base: "column", md: "row" }}
+          spacing={6}
+          align="stretch"
+        >
           {STEPS.map((step, index) => (
             <GlassCard key={step.title} h="full">
               <HStack spacing={3} mb={3}>
-                <Circle size="40px" bg="brand.500" color="white" aria-hidden="true">
+                <Circle
+                  size="40px"
+                  bg="brand.500"
+                  color="white"
+                  aria-hidden="true"
+                >
                   <Box as={step.icon} />
                 </Circle>
                 <Heading as="h3" size="sm">

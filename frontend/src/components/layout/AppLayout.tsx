@@ -48,7 +48,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         zIndex="sticky"
         borderBottomWidth="1px"
         borderColor="border.subtle"
-        bg="blackAlpha.600"
+        bg="bg.header"
         backdropFilter="blur(12px)"
       >
         <Flex maxW="container.xl" mx="auto" px={{ base: 4, md: 6 }} h={16} align="center" gap={3}>
@@ -57,7 +57,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               as={RouterLink}
               to="/"
               size="md"
-              bgGradient="linear(to-r, brand.300, red.400)"
+              bgGradient="linear(to-r, brand.500, red.500)"
               bgClip="text"
               _hover={{ textDecoration: 'none' }}
             >

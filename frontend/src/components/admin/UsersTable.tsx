@@ -36,7 +36,7 @@ export function UsersTable({ users, isLoading, busyUserId, onToggle }: UsersTabl
       borderWidth="1px"
       borderColor="border.subtle"
       borderRadius="xl"
-      bg="whiteAlpha.50"
+      bg="bg.card"
     >
       <Table size="sm" variant="simple">
         <Thead>

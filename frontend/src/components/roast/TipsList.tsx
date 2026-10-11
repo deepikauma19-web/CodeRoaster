@@ -68,7 +68,7 @@ export function TipsList({ tips, interactive = false }: TipsListProps) {
             borderRadius="xl"
             borderWidth="1px"
             borderColor="border.subtle"
-            bg="whiteAlpha.50"
+            bg="bg.card"
           >
             {interactive && (
               <Checkbox

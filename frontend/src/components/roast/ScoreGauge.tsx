@@ -24,7 +24,7 @@ export function ScoreGauge({ score, size = 200, animated = true }: ScoreGaugePro
   const shouldAnimate = animated && !reduceMotion;
   const [animatedValue, setAnimatedValue] = useState<number>(0);
   const display = shouldAnimate ? animatedValue : target;
-  const [trackColor, bandColor] = useToken('colors', ['whiteAlpha.200', `${band.colorScheme}.400`]);
+  const [trackColor, bandColor] = useToken('colors', ['bg.track', `${band.colorScheme}.400`]);
 
   useEffect(() => {
     if (!shouldAnimate) return undefined;

@@ -36,7 +36,7 @@ export function RoastsTable({ roasts, isLoading, onView, onDelete }: RoastsTable
       borderWidth="1px"
       borderColor="border.subtle"
       borderRadius="xl"
-      bg="whiteAlpha.50"
+      bg="bg.card"
     >
       <Table size="sm" variant="simple">
         <Thead>

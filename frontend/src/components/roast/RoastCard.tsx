@@ -51,7 +51,7 @@ const markdownComponents: Components = {
     </Code>
   ),
   pre: ({ children }: ChildrenProps) => (
-    <Box as="pre" mb={4} p={3} borderRadius="md" bg="blackAlpha.400" overflowX="auto">
+    <Box as="pre" mb={4} p={3} borderRadius="md" bg="bg.code" overflowX="auto">
       {children}
     </Box>
   ),

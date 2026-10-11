@@ -80,7 +80,7 @@ export function RoastLoader({ status }: RoastLoaderProps) {
                 size={7}
                 fontSize="xs"
                 fontWeight="bold"
-                bg={done ? 'green.400' : current ? 'brand.500' : 'whiteAlpha.200'}
+                bg={done ? 'green.400' : current ? 'brand.500' : 'bg.track'}
                 color={done || current ? 'white' : 'text.muted'}
               >
                 {current ? <Spinner size="xs" /> : done ? '✓' : i + 1}

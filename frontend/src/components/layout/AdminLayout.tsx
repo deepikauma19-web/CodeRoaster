@@ -59,7 +59,7 @@ export function AdminLayout() {
               borderRadius="lg"
               color="text.muted"
               transition="all 0.15s"
-              _hover={{ bg: 'whiteAlpha.100', color: 'chakra-body-text' }}
+              _hover={{ bg: 'bg.subtle', color: 'chakra-body-text' }}
               sx={{ '&.active': { bg: 'brand.500', color: 'white' } }}
             >
               <Icon as={item.icon} />
