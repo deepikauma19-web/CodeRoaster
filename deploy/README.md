@@ -203,3 +203,21 @@ restore a backup or run `alembic downgrade` in the backend container first:
   the backend port is reachable from the host's nginx alone.
 - The `.env` on the server should be `chmod 600` and is excluded from rsync, so it is
   never overwritten or deleted.
+
+---
+
+## Alternative: VPS that already runs Traefik (no host nginx)
+
+If ports 80/443 are already owned by a Traefik container (for example an n8n stack), do **not**
+run `setup-vps.sh` / `enable-ssl.sh` (nginx, certbot and ufw would clash). Use the Traefik override:
+
+```bash
+PROXY=traefik DEPLOY_HOST=<VPS_IP> ./deploy/deploy.sh
+```
+
+`docker-compose.traefik.yml` publishes no host ports, joins Traefik's Docker network and adds
+labels routing `/api/*` and `/health` to the backend and everything else to the frontend, with
+TLS from Traefik's Let's Encrypt resolver. Defaults match an n8n-style Traefik; override in the
+server `.env` if yours differ: `TRAEFIK_NETWORK` (`n8n_default`), `TRAEFIK_CERT_RESOLVER`
+(`mytlschallenge`), `ROASTER_HOST` (`roaster.getvibed.tech`).
+Docker itself must be installed on the VPS; nothing else is installed or reconfigured.

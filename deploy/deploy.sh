@@ -12,6 +12,8 @@
 #   SSH_KEY       private key path               (default: ~/.ssh/roaster_vps)
 #   REMOTE_DIR    app directory on the VPS       (default: /opt/assignment-roaster)
 #   HEALTH_TIMEOUT seconds to wait for /health   (default: 180)
+#   PROXY         nginx (default) or traefik. "traefik" adds docker-compose.traefik.yml
+#                 (existing Traefik on the VPS, no host nginx, no published ports).
 set -euo pipefail
 
 DEPLOY_HOST="${1:-${DEPLOY_HOST:-}}"
@@ -19,7 +21,13 @@ DEPLOY_USER="${DEPLOY_USER:-root}"
 SSH_KEY="${SSH_KEY:-${HOME}/.ssh/roaster_vps}"
 REMOTE_DIR="${REMOTE_DIR:-/opt/assignment-roaster}"
 HEALTH_TIMEOUT="${HEALTH_TIMEOUT:-180}"
+PROXY="${PROXY:-nginx}"
 COMPOSE="docker compose -f docker-compose.yml -f docker-compose.prod.yml"
+case "${PROXY}" in
+    nginx) ;;
+    traefik) COMPOSE="${COMPOSE} -f docker-compose.traefik.yml" ;;
+    *) printf 'ERROR: PROXY must be nginx or traefik\n' >&2; exit 1 ;;
+esac
 
 log() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 die() { printf '\033[1;31mERROR:\033[0m %s\n' "$*" >&2; exit 1; }
@@ -112,20 +120,28 @@ remote "cd '${REMOTE_DIR}' && \
     docker image prune -f >/dev/null"
 
 log "Waiting for backend health (timeout ${HEALTH_TIMEOUT}s)"
+if [[ "${PROXY}" == "traefik" ]]; then
+    # No host ports are published behind Traefik, so probe from inside the container.
+    HEALTH_PROBE="cd '${REMOTE_DIR}' && ${COMPOSE} exec -T backend python -c \"import urllib.request as u; print(u.urlopen('http://127.0.0.1:8000/health', timeout=5).read().decode())\""
+else
+    HEALTH_PROBE="curl -fsS http://127.0.0.1:8000/health"
+fi
 if remote "for i in \$(seq 1 $((HEALTH_TIMEOUT / 3))); do \
-        if curl -fsS http://127.0.0.1:8000/health >/dev/null 2>&1; then exit 0; fi; sleep 3; \
+        if ${HEALTH_PROBE//\$/\\$} >/dev/null 2>&1; then exit 0; fi; sleep 3; \
     done; exit 1"; then
-    echo "Backend is healthy: $(remote 'curl -fsS http://127.0.0.1:8000/health')"
+    echo "Backend is healthy: $(remote "${HEALTH_PROBE}")"
 else
     echo "Backend did not become healthy in time. Recent backend logs:" >&2
     remote "cd '${REMOTE_DIR}' && ${COMPOSE} logs --tail=80 backend" >&2 || true
     exit 1
 fi
 
-if remote "curl -fsS -o /dev/null http://127.0.0.1:3000/"; then
-    echo "Frontend is responding on 127.0.0.1:3000"
-else
-    echo "Warning: frontend not responding on 127.0.0.1:3000 yet." >&2
+if [[ "${PROXY}" == "nginx" ]]; then
+    if remote "curl -fsS -o /dev/null http://127.0.0.1:3000/"; then
+        echo "Frontend is responding on 127.0.0.1:3000"
+    else
+        echo "Warning: frontend not responding on 127.0.0.1:3000 yet." >&2
+    fi
 fi
 
 log "Status"
