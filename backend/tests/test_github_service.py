@@ -423,8 +423,13 @@ async def test_fetch_stream_limit_without_content_length(respx_mock: respx.MockR
 
 def test_notebook_extracted_text_still_gets_char_budget() -> None:
     long_cell = "x = 1\n" * 10_000
-    files = [gh.RepoFile("nb.ipynb", gh.extract_notebook_text(json.dumps(
-        {"cells": [{"cell_type": "code", "source": long_cell}]}
-    )))]
+    files = [
+        gh.RepoFile(
+            "nb.ipynb",
+            gh.extract_notebook_text(
+                json.dumps({"cells": [{"cell_type": "code", "source": long_cell}]})
+            ),
+        )
+    ]
     kept, truncated = gh.apply_char_budget(files, 8000)
     assert truncated and len(kept[0].content) <= 2000 + len(gh.TRUNCATION_MARKER)

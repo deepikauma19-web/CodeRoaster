@@ -202,9 +202,7 @@ async def test_run_roast_twice_runs_pipeline_once(
 ) -> None:
     mock_github_repo(respx_mock)
     fake_openai.queue_json()
-    await asyncio.gather(
-        roast_pipeline.run_roast(pending.id), roast_pipeline.run_roast(pending.id)
-    )
+    await asyncio.gather(roast_pipeline.run_roast(pending.id), roast_pipeline.run_roast(pending.id))
     await roast_pipeline.run_roast(pending.id)
     assert len(fake_openai.calls) == 1
     roast = _reload(db, pending.id)
@@ -387,9 +385,7 @@ def test_startup_sweep_fails_all_active_roasts(
     main._fail_stale_roasts()  # logged, never raised
 
 
-def test_claim_is_compare_and_set(
-    session_factory: sessionmaker[Session], pending: Roast
-) -> None:
+def test_claim_is_compare_and_set(session_factory: sessionmaker[Session], pending: Roast) -> None:
     first, second = session_factory(), session_factory()
     try:
         # Both sessions have seen the roast as pending; only one claim may succeed.
