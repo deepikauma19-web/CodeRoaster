@@ -1,38 +1,78 @@
 import { Box, Text } from '@chakra-ui/react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
+import roasterGirl from '../../assets/roaster-girl.webp';
 import { useCursorVector, type CursorVector } from '../../hooks/useCursorVector';
 
-const MotionBox = motion.create(Box);
-
-const HEAD_ANCHOR: CursorVector = { x: 0.5, y: 0.25 };
-const FOLLOW_SPRING = { type: 'spring', stiffness: 130, damping: 14, mass: 0.6 } as const;
-
-const HAIR = '#3b2218';
-const SKIN = '#f6c9a8';
-const MINT = '#8fe3c7';
-const MINT_DARK = '#6fd2b0';
-const CORAL = '#ff8fa3';
+const FOLLOW_SPRING = { type: 'spring', stiffness: 110, damping: 16, mass: 0.7 } as const;
 
 const GREETING = 'Vaanga! Un repo-va paste pannu, naan roast pannren 🔥';
 const HOVER_LINE = 'Enna paakura? Sign in pannu da, score paakalaam! 😄';
 
+/** Eye geometry in the cropped photo's coordinate space. */
+const PHOTO_W = 1400;
+const PHOTO_H = 1620;
+const SCLERA = '#f4eceb';
+
+interface Eye {
+  id: string;
+  /** Iris centre. */
+  cx: number;
+  cy: number;
+  /** Iris radius. */
+  r: number;
+  /** Eye-opening ellipse (keeps the moving iris inside the lids), rotated by `angle` degrees. */
+  openCx: number;
+  openCy: number;
+  openRx: number;
+  openRy: number;
+  angle: number;
+}
+
+const EYES: Eye[] = [
+  { id: 'left', cx: 721, cy: 272, r: 15.5, openCx: 721, openCy: 273, openRx: 26, openRy: 12.5, angle: 6 },
+  { id: 'right', cx: 841, cy: 258, r: 15.5, openCx: 840, openCy: 260, openRx: 28, openRy: 13, angle: -8 },
+];
+
+const eyeTransform = (eye: Eye): string => `rotate(${eye.angle} ${eye.openCx} ${eye.openCy})`;
+
+/** Where the cursor vector is measured from: between her eyes, as a fraction of the photo. */
+const EYE_ANCHOR: CursorVector = { x: 781 / PHOTO_W, y: 265 / PHOTO_H };
 /**
- * Cartoon presenter for the landing page. Her head and eyes follow the cursor,
- * she waves, and the speech bubble reacts when the pointer is over her.
+ * Head/body split (photo y). The body layer is erased above `BODY_FADE_*`, the head layer fades out
+ * below `HEAD_FADE_*`; the two overlap across the neck so no seam shows while the head leans.
+ */
+const BODY_FADE_START = 440;
+const BODY_FADE_END = 470;
+const HEAD_FADE_START = 470;
+const HEAD_FADE_END = 520;
+/** The head pivots here (base of the neck) as a fraction of the photo. */
+const NECK_PIVOT = { x: 781 / PHOTO_W, y: HEAD_FADE_START / PHOTO_H };
+/** Max head lean in degrees / shift in photo pixels. */
+const TILT_DEG = 5;
+const SHIFT_X = 6;
+const SHIFT_Y = 3;
+/** Max iris travel in photo pixels. */
+const TRAVEL_X = 9;
+const TRAVEL_Y = 4.5;
+
+/**
+ * Landing-page presenter. Her head (a feathered cut-out of the photo) leans toward the cursor
+ * from the neck, and her irises slide toward it too (each iris is cut from the photo itself and
+ * clipped to the eye opening). The body stays still.
+ * The speech bubble reacts to hover. Motion is disabled by `useCursorVector`
+ * when the user prefers reduced motion.
  */
 export function RoasterMascot() {
-  const ref = useRef<HTMLDivElement>(null);
-  const look = useCursorVector(ref, HEAD_ANCHOR);
-  const reduceMotion = useReducedMotion() ?? false;
+  const portraitRef = useRef<HTMLDivElement>(null);
+  const look = useCursorVector(portraitRef, EYE_ANCHOR, 320);
   const [hovered, setHovered] = useState(false);
 
   return (
     <Box
-      ref={ref}
       position="relative"
       w="full"
-      maxW="340px"
+      maxW="400px"
       mx="auto"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
@@ -66,121 +106,108 @@ export function RoasterMascot() {
         </Text>
       </Box>
 
-      <MotionBox
-        animate={reduceMotion ? undefined : { y: [0, -6, 0] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-      >
+      <Box ref={portraitRef} position="relative">
         <Box
           as="svg"
-          viewBox="0 0 300 440"
+          viewBox={`0 0 ${PHOTO_W} ${PHOTO_H}`}
+          display="block"
           w="full"
           h="auto"
           role="img"
-          aria-label="Cartoon illustration of a young woman in a mint blazer, waving and holding a laptop that shows a score of 92"
+          aria-label="Cartoon illustration of a smiling young woman with long wavy hair, sitting cross-legged"
         >
-          <ellipse cx="150" cy="424" rx="78" ry="9" fill="#000" opacity="0.08" />
+          <defs>
+            <linearGradient
+              id="rm-body-fade"
+              gradientUnits="userSpaceOnUse"
+              x1={0}
+              y1={BODY_FADE_START}
+              x2={0}
+              y2={BODY_FADE_END}
+            >
+              <stop offset="0" stopColor="#000" />
+              <stop offset="1" stopColor="#fff" />
+            </linearGradient>
+            <linearGradient
+              id="rm-head-fade"
+              gradientUnits="userSpaceOnUse"
+              x1={0}
+              y1={HEAD_FADE_START}
+              x2={0}
+              y2={HEAD_FADE_END}
+            >
+              <stop offset="0" stopColor="#fff" />
+              <stop offset="1" stopColor="#000" />
+            </linearGradient>
+            <radialGradient id="rm-ground-shadow">
+              <stop offset="0" stopColor="#5a2a14" stopOpacity="0.28" />
+              <stop offset="1" stopColor="#5a2a14" stopOpacity="0" />
+            </radialGradient>
+            <mask id="rm-body-mask" maskUnits="userSpaceOnUse" x={0} y={-300} width={PHOTO_W} height={PHOTO_H + 600}>
+              <rect x={0} y={-300} width={PHOTO_W} height={PHOTO_H + 600} fill="url(#rm-body-fade)" />
+            </mask>
+            <mask id="rm-head-mask" maskUnits="userSpaceOnUse" x={0} y={-300} width={PHOTO_W} height={PHOTO_H + 600}>
+              <rect x={0} y={-300} width={PHOTO_W} height={PHOTO_H + 600} fill="url(#rm-head-fade)" />
+            </mask>
+            <linearGradient id="rm-lid-shadow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#2a1a18" stopOpacity="0.5" />
+              <stop offset="0.5" stopColor="#2a1a18" stopOpacity="0" />
+            </linearGradient>
+            {EYES.map((eye) => (
+              <g key={eye.id}>
+                <clipPath id={`rm-open-${eye.id}`}>
+                  <ellipse cx={eye.openCx} cy={eye.openCy} rx={eye.openRx} ry={eye.openRy} transform={eyeTransform(eye)} />
+                </clipPath>
+                <clipPath id={`rm-iris-${eye.id}`}>
+                  <circle cx={eye.cx} cy={eye.cy} r={eye.r} />
+                </clipPath>
+              </g>
+            ))}
+          </defs>
 
-          {/* wide-leg trousers */}
-          <path
-            d="M110 236 L190 236 L218 406 L160 406 L150 300 L140 406 L82 406 Z"
-            fill="#fff1dc"
-            stroke="#ecd6b4"
-            strokeWidth="2"
-            strokeLinejoin="round"
-          />
-          <path d="M150 300 L150 240" stroke="#ecd6b4" strokeWidth="2" />
-          <rect x="108" y="230" width="84" height="12" rx="5" fill="#f4dcb8" />
-          <circle cx="150" cy="236" r="4" fill="#ffcc4d" />
+          <ellipse cx={690} cy={PHOTO_H - 50} rx={470} ry={46} fill="url(#rm-ground-shadow)" />
 
-          {/* sneakers */}
-          <path d="M80 404 h62 q5 15 -5 19 h-54 q-8 -9 -3 -19z" fill="#fff" stroke="#e4d9cf" strokeWidth="2" />
-          <path d="M82 418 h58" stroke={CORAL} strokeWidth="4" strokeLinecap="round" />
-          <path d="M158 404 h62 q5 10 -3 19 h-54 q-10 -4 -5 -19z" fill="#fff" stroke="#e4d9cf" strokeWidth="2" />
-          <path d="M160 418 h58" stroke={CORAL} strokeWidth="4" strokeLinecap="round" />
-
-          {/* long hair behind */}
-          <path d="M96 100 Q80 190 104 226 Q124 214 124 190 Z" fill={HAIR} />
-          <path d="M204 100 Q220 190 196 226 Q176 214 176 190 Z" fill={HAIR} />
-
-          {/* crop top, neck, blazer */}
-          <path d="M114 190 Q150 204 186 190 L190 240 L110 240 Z" fill={CORAL} />
-          <rect x="139" y="160" width="22" height="34" rx="8" fill="#e9ac86" />
-          <path
-            d="M112 186 Q150 172 188 186 L196 214 L190 276 L168 276 L162 196 L138 196 L132 276 L110 276 L104 214 Z"
-            fill={MINT}
-          />
-          <path d="M138 196 L122 188 L126 232 L132 276 Z" fill={MINT_DARK} />
-          <path d="M162 196 L178 188 L174 232 L168 276 Z" fill={MINT_DARK} />
-
-          {/* waving arm */}
-          <g>
-            {!reduceMotion && (
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="-6 114 200;10 114 200;-6 114 200"
-                dur="1.4s"
-                repeatCount="indefinite"
-              />
-            )}
-            <path d="M114 200 L76 150" stroke={MINT} strokeWidth="26" strokeLinecap="round" />
-            <path d="M114 200 L76 150" stroke={MINT_DARK} strokeWidth="3" strokeLinecap="round" opacity="0.5" />
-            <circle cx="70" cy="136" r="13" fill={SKIN} />
-            <path d="M62 126 l-2 -10 M70 122 l0 -12 M78 126 l3 -10" stroke={SKIN} strokeWidth="6" strokeLinecap="round" />
+          <g mask="url(#rm-body-mask)">
+            <image href={roasterGirl} x={0} y={0} width={PHOTO_W} height={PHOTO_H} />
           </g>
 
-          {/* other arm + laptop showing the score */}
-          <path
-            d="M186 202 L208 250 L184 282"
-            stroke={MINT}
-            strokeWidth="24"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-          <rect x="124" y="238" width="70" height="44" rx="6" fill="#fff" stroke="#c9d1e6" strokeWidth="3" />
-          <circle cx="148" cy="260" r="12" fill="none" stroke="#ffe0bf" strokeWidth="5" />
-          <path d="M148 248 A12 12 0 1 1 138 267" fill="none" stroke="#f9620f" strokeWidth="5" strokeLinecap="round" />
-          <text x="176" y="265" fontSize="14" fontWeight="700" fill="#e2470b" textAnchor="middle" fontFamily="Arial, sans-serif">
-            92
-          </text>
-          <rect x="116" y="282" width="86" height="7" rx="3.5" fill="#c9d1e6" />
-          <circle cx="186" cy="282" r="11" fill={SKIN} />
 
-          {/* head: follows the cursor */}
-          <motion.g animate={{ x: look.x * 4, y: look.y * 3, rotate: look.x * 5 }} transition={FOLLOW_SPRING}>
-            <circle cx="150" cy="50" r="22" fill={HAIR} />
-            <ellipse cx="150" cy="68" rx="24" ry="6" fill={CORAL} />
-            <ellipse cx="150" cy="106" rx="58" ry="60" fill={HAIR} />
-            <circle cx="106" cy="120" r="8" fill={SKIN} />
-            <circle cx="194" cy="120" r="8" fill={SKIN} />
-            <circle cx="104" cy="136" r="7" fill="none" stroke="#ffcc4d" strokeWidth="2.5" />
-            <circle cx="196" cy="136" r="7" fill="none" stroke="#ffcc4d" strokeWidth="2.5" />
-            <ellipse cx="150" cy="116" rx="44" ry="50" fill={SKIN} />
-            <path d="M104 104 Q116 62 150 66 Q184 62 196 104 Q176 84 150 92 Q124 84 104 104 Z" fill={HAIR} />
-            <path d="M118 80 Q130 70 146 70" stroke="#5a3524" strokeWidth="3" fill="none" strokeLinecap="round" />
-            <path d="M118 100 Q130 94 142 100" stroke={HAIR} strokeWidth="3" fill="none" strokeLinecap="round" />
-            <path d="M158 100 Q170 94 182 100" stroke={HAIR} strokeWidth="3" fill="none" strokeLinecap="round" />
-
-            <ellipse cx="130" cy="118" rx="11" ry="13" fill="#fff" stroke={HAIR} strokeWidth="1.5" />
-            <ellipse cx="170" cy="118" rx="11" ry="13" fill="#fff" stroke={HAIR} strokeWidth="1.5" />
-            <motion.g animate={{ x: look.x * 3.5, y: look.y * 3.5 }} transition={FOLLOW_SPRING}>
-              <circle cx="130" cy="118" r="7" fill="#4a2a1c" />
-              <circle cx="130" cy="118" r="3.4" fill="#1d0f09" />
-              <circle cx="132.5" cy="115" r="2" fill="#fff" />
-              <circle cx="170" cy="118" r="7" fill="#4a2a1c" />
-              <circle cx="170" cy="118" r="3.4" fill="#1d0f09" />
-              <circle cx="172.5" cy="115" r="2" fill="#fff" />
+          <g mask="url(#rm-head-mask)">
+            <motion.g
+              initial={{ originX: NECK_PIVOT.x, originY: NECK_PIVOT.y }}
+              animate={{ rotate: look.x * TILT_DEG, x: look.x * SHIFT_X, y: look.y * SHIFT_Y }}
+              transition={FOLLOW_SPRING}
+            >
+              <image href={roasterGirl} x={0} y={0} width={PHOTO_W} height={PHOTO_H} />
+              {EYES.map((eye) => (
+                <g key={eye.id} clipPath={`url(#rm-open-${eye.id})`}>
+                  <ellipse
+                    cx={eye.openCx}
+                    cy={eye.openCy}
+                    rx={eye.openRx}
+                    ry={eye.openRy}
+                    transform={eyeTransform(eye)}
+                    fill={SCLERA}
+                  />
+                  <motion.g animate={{ x: look.x * TRAVEL_X, y: look.y * TRAVEL_Y }} transition={FOLLOW_SPRING}>
+                    <g clipPath={`url(#rm-iris-${eye.id})`}>
+                      <image href={roasterGirl} x={0} y={0} width={PHOTO_W} height={PHOTO_H} />
+                    </g>
+                  </motion.g>
+                  <ellipse
+                    cx={eye.openCx}
+                    cy={eye.openCy}
+                    rx={eye.openRx}
+                    ry={eye.openRy}
+                    transform={eyeTransform(eye)}
+                    fill="url(#rm-lid-shadow)"
+                  />
+                </g>
+              ))}
             </motion.g>
-            <path d="M118 108 q-4 -3 -6 -7 M182 108 q4 -3 6 -7" stroke={HAIR} strokeWidth="2.4" strokeLinecap="round" fill="none" />
-            <ellipse cx="116" cy="140" rx="9" ry="5.5" fill={CORAL} opacity="0.5" />
-            <ellipse cx="184" cy="140" rx="9" ry="5.5" fill={CORAL} opacity="0.5" />
-            <path d="M148 130 q2 5 5 0" stroke="#d9966f" strokeWidth="2" fill="none" strokeLinecap="round" />
-            <path d="M134 146 Q150 168 166 146 Q150 152 134 146 Z" fill="#d6405c" />
-            <path d="M140 148 Q150 152 160 148 L158 152 Q150 155 142 152 Z" fill="#fff" />
-          </motion.g>
+          </g>
         </Box>
-      </MotionBox>
+      </Box>
     </Box>
   );
 }

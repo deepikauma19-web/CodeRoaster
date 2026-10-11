@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const MotionBox = motion.create(Box);
-const SIZE = 280;
+const SIZE = 130;
 
 interface Point {
   x: number;
@@ -51,8 +51,8 @@ export function CursorGlow() {
       borderRadius="full"
       pointerEvents="none"
       zIndex={0}
-      bgGradient="radial(rgba(255, 150, 90, 0.35), rgba(255, 150, 200, 0.18) 45%, transparent 70%)"
-      filter="blur(10px)"
+      bgGradient="radial(rgba(170, 45, 10, 0.42), rgba(110, 30, 80, 0.22) 45%, transparent 70%)"
+      filter="blur(6px)"
       initial={{ opacity: 0, x: point.x - SIZE / 2, y: point.y - SIZE / 2 }}
       animate={{ opacity: 1, x: point.x - SIZE / 2, y: point.y - SIZE / 2 }}
       transition={{ type: 'spring', stiffness: 140, damping: 20, mass: 0.6 }}
