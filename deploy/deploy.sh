@@ -105,7 +105,7 @@ The production env file does not exist on the server yet. Create it, then re-run
 EOF
     exit 1
 fi
-if remote "grep -q 'CHANGE_ME' '${REMOTE_DIR}/.env'"; then
+if remote "grep -qE '^[^#]*CHANGE_ME' '${REMOTE_DIR}/.env'"; then
     die "Remote .env still contains CHANGE_ME placeholders. Edit ${REMOTE_DIR}/.env on the server first."
 fi
 
