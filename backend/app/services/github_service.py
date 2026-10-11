@@ -33,7 +33,7 @@ MAX_FILE_BYTES = 100 * 1024
 MAX_NOTEBOOK_BYTES = 5 * 1024 * 1024
 MAX_READMES = 3
 MAX_DEPENDENCY_FILES = 8
-TRUNCATION_MARKER = "\n... [truncated by Assignment Roaster]\n"
+TRUNCATION_MARKER = "\n... [truncated by Code Roaster]\n"
 
 REPO_URL_RE = re.compile(r"^https://github\.com/([A-Za-z0-9-]+)/([A-Za-z0-9._-]+?)/?$")
 

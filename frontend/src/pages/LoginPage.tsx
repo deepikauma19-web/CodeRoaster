@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import type { ReactNode } from "react";
 import type { IconType } from "react-icons";
 import { FiAward, FiGithub, FiZap } from "react-icons/fi";
 import { Navigate } from "react-router-dom";
@@ -51,6 +52,49 @@ const STEPS: HowItWorksStep[] = [
   },
 ];
 
+interface RoastExample {
+  repo: string;
+  intensity: string;
+  badgeScheme: string;
+  roast: ReactNode;
+  score: number;
+  scoreBg: string;
+  tip: string;
+}
+
+const EXAMPLES: RoastExample[] = [
+  {
+    repo: "student/todo-app-final-FINAL-v2",
+    intensity: "Extra Spicy 🌶️🌶️🌶️",
+    badgeScheme: "red",
+    roast: (
+      <>
+        “Bro, <Code>main.py</Code>-la 800 lines-a? Idhu file illa, novel. And
+        that API key in <Code>config.py</Code>… GitHub-la public-a podra
+        alavukku generous-a irukka? 😭”
+      </>
+    ),
+    score: 42,
+    scoreBg: "red.500",
+    tip: "split main.py into modules & move secrets to .env",
+  },
+  {
+    repo: "learner/ai-chatbot-starter",
+    intensity: "Medium 🌶️🌶️",
+    badgeScheme: "orange",
+    roast: (
+      <>
+        “Chatbot logic nalla irukku, aana <Code>README.md</Code>-la ‘TODO’
+        mattum dhaan? Interview-la epdi explain pannuva? Tests-um illa — bug
+        vandha bot-ae sirikkum 😅”
+      </>
+    ),
+    score: 71,
+    scoreBg: "orange.400",
+    tip: "add a README with setup steps and a few pytest cases",
+  },
+];
+
 export default function LoginPage() {
   const { status } = useAuth();
 
@@ -78,7 +122,7 @@ export default function LoginPage() {
             AI code review, but make it spicy
           </Badge>
           <Heading as="h1" size="2xl" lineHeight="1.1">
-            Assignment Roaster 2.0{" "}
+            Code Roaster{" "}
             <Box as="span" role="img" aria-label="fire">
               🔥
             </Box>
@@ -102,45 +146,57 @@ export default function LoginPage() {
         <RoasterMascot />
       </SimpleGrid>
 
-      <Box mt={{ base: 12, md: 16 }} maxW="container.md" mx="auto">
+      <Box mt={{ base: 12, md: 16 }}>
         <Heading as="h2" size="lg" mb={6} textAlign="center">
-          Sample roast
+          Roast Examples
         </Heading>
-        <GlassCard static aria-label="Sample roast">
-          <HStack justify="space-between" mb={4}>
-            <HStack spacing={2}>
-              <Box as={FiGithub} aria-hidden="true" />
-              <Code bg="transparent" fontSize="sm">
-                student/todo-app-final-FINAL-v2
-              </Code>
-            </HStack>
-            <Badge colorScheme="red" borderRadius="full" px={2}>
-              Extra Spicy 🌶️🌶️🌶️
-            </Badge>
-          </HStack>
-          <Text fontSize="lg" mb={4}>
-            “Bro, <Code>main.py</Code>-la 800 lines-a? Idhu file illa, novel.
-            And that API key in <Code>config.py</Code>… GitHub-la public-a podra
-            alavukku generous-a irukka? 😭”
-          </Text>
-          <HStack spacing={4} align="center">
-            <Circle
-              size="56px"
-              bg="brand.500"
-              color="white"
-              fontWeight="bold"
-              fontSize="lg"
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+          {EXAMPLES.map((example) => (
+            <GlassCard
+              key={example.repo}
+              static
+              aria-label={`Roast example: ${example.repo}`}
+              h="full"
             >
-              42
-            </Circle>
-            <Stack spacing={0}>
-              <Text fontWeight="semibold">Score: 42/100</Text>
-              <Text fontSize="sm" color="text.muted">
-                Top tip: split main.py into modules & move secrets to .env
+              <HStack justify="space-between" mb={4} spacing={3}>
+                <HStack spacing={2} minW={0}>
+                  <Box as={FiGithub} aria-hidden="true" flexShrink={0} />
+                  <Code bg="transparent" fontSize="sm" noOfLines={1}>
+                    {example.repo}
+                  </Code>
+                </HStack>
+                <Badge
+                  colorScheme={example.badgeScheme}
+                  borderRadius="full"
+                  px={2}
+                  flexShrink={0}
+                >
+                  {example.intensity}
+                </Badge>
+              </HStack>
+              <Text fontSize="lg" mb={4}>
+                {example.roast}
               </Text>
-            </Stack>
-          </HStack>
-        </GlassCard>
+              <HStack spacing={4} align="center">
+                <Circle
+                  size="56px"
+                  bg={example.scoreBg}
+                  color="white"
+                  fontWeight="bold"
+                  fontSize="lg"
+                >
+                  {example.score}
+                </Circle>
+                <Stack spacing={0}>
+                  <Text fontWeight="semibold">Score: {example.score}/100</Text>
+                  <Text fontSize="sm" color="text.muted">
+                    Top tip: {example.tip}
+                  </Text>
+                </Stack>
+              </HStack>
+            </GlassCard>
+          ))}
+        </SimpleGrid>
       </Box>
 
       <Box mt={{ base: 14, md: 20 }}>

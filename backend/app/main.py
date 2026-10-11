@@ -66,7 +66,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 
 def create_app() -> FastAPI:
-    application = FastAPI(title="Assignment Roaster 2.0", version="2.0.0", lifespan=lifespan)
+    application = FastAPI(title="Code Roaster", version="2.0.0", lifespan=lifespan)
 
     application.state.limiter = limiter
     application.add_exception_handler(

@@ -18,7 +18,7 @@ const renderPage = (slug = 'abc123') =>
 describe('PublicRoastPage', () => {
   beforeEach(() => {
     mockGetPublic.mockReset();
-    document.title = 'Assignment Roaster';
+    document.title = 'Code Roaster';
   });
 
   it('shows a skeleton while loading', () => {
@@ -41,7 +41,7 @@ describe('PublicRoastPage', () => {
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     expect(screen.getByLabelText('Intensity: Extra Spicy')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Un repo-vum roast pannalaama/ })).toHaveAttribute('href', '/login');
-    await waitFor(() => expect(document.title).toBe('octo/todo-app – 35/100 | Assignment Roaster'));
+    await waitFor(() => expect(document.title).toBe('octo/todo-app – 35/100 | Code Roaster'));
   });
 
   it('handles a roast without score or text', async () => {
@@ -58,7 +58,7 @@ describe('PublicRoastPage', () => {
     mockGetPublic.mockRejectedValue(axiosError(404, { detail: 'Not found' }));
     renderPage('gone');
     expect(await screen.findByTestId('public-roast-unavailable')).toHaveTextContent(/private-aa irukku illa delete/);
-    await waitFor(() => expect(document.title).toBe('Roast not found | Assignment Roaster'));
+    await waitFor(() => expect(document.title).toBe('Roast not found | Code Roaster'));
   });
 
   it('other errors show a load failure with message', async () => {

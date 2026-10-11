@@ -28,7 +28,7 @@ import { getErrorMessage } from '../services/api';
 import { getPublicRoast } from '../services/shareApi';
 import type { PublicRoastResponse } from '../types/roast';
 
-const APP_TITLE = 'Assignment Roaster';
+const APP_TITLE = 'Code Roaster';
 
 type LoadState =
   | { kind: 'loading' }

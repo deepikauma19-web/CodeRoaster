@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy Assignment Roaster from this checkout (your Mac) to the VPS over SSH.
+# Deploy Code Roaster from this checkout (your Mac) to the VPS over SSH.
 # No GitHub credentials are needed on the server: the working tree is rsynced.
 #
 # Usage (from the repo root):

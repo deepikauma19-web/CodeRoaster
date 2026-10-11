@@ -34,7 +34,7 @@ class Settings(BaseSettings):
         hide_input_in_errors=True,
     )
 
-    APP_NAME: str = "Assignment Roaster 2.0"
+    APP_NAME: str = "Code Roaster"
     ENVIRONMENT: Literal["development", "production", "test"] = "development"
     LOG_LEVEL: str = "INFO"
 

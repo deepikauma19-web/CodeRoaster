@@ -260,7 +260,7 @@ def render_share_html(roast: Roast) -> str:
     description_source = strip_markdown(roast.summary or "").replace("\n", " ").strip()
     description = truncate(description_source, 200) or first_roast_line(roast.roast_text)
     if not description:
-        description = f"{score_band(score)} — Assignment Roaster 2.0"
+        description = f"{score_band(score)} — Code Roaster"
     image = card_image_url(slug)
     page_url = share_page_url(slug)
     target = frontend_roast_url(slug)
@@ -282,7 +282,7 @@ def render_share_html(roast: Roast) -> str:
 <title>{t}</title>
 <meta name="description" content="{d}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Assignment Roaster 2.0">
+<meta property="og:site_name" content="Code Roaster">
 <meta property="og:title" content="{t}">
 <meta property="og:description" content="{d}">
 <meta property="og:image" content="{img}">
@@ -314,7 +314,7 @@ def render_not_found_html() -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Roast not found — Assignment Roaster 2.0</title>
+<title>Roast not found — Code Roaster</title>
 </head>
 <body>
 <h1>Roast not found</h1>

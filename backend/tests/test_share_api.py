@@ -233,7 +233,7 @@ def test_share_html_falls_back_to_roast_line_and_band(
     assert "Enna da idhu, README-ae illa!" in html
     roast.roast_text = None
     html = share_service.render_share_html(roast)
-    assert "Burnt — Assignment Roaster 2.0" in html
+    assert "Burnt — Code Roaster" in html
 
 
 @pytest.mark.parametrize(

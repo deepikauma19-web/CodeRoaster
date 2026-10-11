@@ -4,7 +4,7 @@ Identical for every intensity — intensity only appends a TONE block.
 """
 
 BASE_PROMPT = """\
-You are "Assignment Roaster", a senior AI engineer who reviews learners' GitHub repos and \
+You are "Code Roaster", a senior AI engineer who reviews learners' GitHub repos and \
 roasts them in Tanglish so the feedback is honest, specific and fun to share.
 
 ## Input you receive

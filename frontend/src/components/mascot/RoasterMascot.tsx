@@ -80,6 +80,7 @@ export function RoasterMascot() {
       <Box
         position="relative"
         bg="white"
+        color="gray.800"
         borderWidth="1px"
         borderColor="border.subtle"
         borderRadius="2xl"

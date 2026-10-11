@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-time (idempotent) provisioning of an Ubuntu 22.04/24.04 VPS for Assignment Roaster.
+# One-time (idempotent) provisioning of an Ubuntu 22.04/24.04 VPS for Code Roaster.
 # Run as root on the VPS, e.g. from your Mac:
 #   ssh -i ~/.ssh/roaster_vps root@VPS_IP 'bash -s' < deploy/setup-vps.sh
 set -euo pipefail

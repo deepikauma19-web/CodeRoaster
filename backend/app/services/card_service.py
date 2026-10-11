@@ -204,8 +204,8 @@ def render_card(data: CardData) -> bytes:
     # Wordmark (top left)
     _flame(draw, margin, 46, 40)
     wordmark_font = _font(30, 800)
-    draw.text((margin + 40, 50), "Assignment Roaster", font=wordmark_font, fill=TEXT)
-    wm_w = _text_width(draw, "Assignment Roaster ", wordmark_font)
+    draw.text((margin + 40, 50), "Code Roaster", font=wordmark_font, fill=TEXT)
+    wm_w = _text_width(draw, "Code Roaster ", wordmark_font)
     draw.text((margin + 40 + wm_w, 50), "2.0", font=wordmark_font, fill=ORANGE)
 
     # Intensity chilis (top right)

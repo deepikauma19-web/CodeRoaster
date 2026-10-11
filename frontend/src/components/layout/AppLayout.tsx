@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
-import { FiLogIn, FiLogOut, FiPlus, FiShield, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiPlus, FiShield, FiUser } from 'react-icons/fi';
 import { Link as RouterLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -29,7 +29,7 @@ export interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const { user, status, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -61,7 +61,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               bgClip="text"
               _hover={{ textDecoration: 'none' }}
             >
-              Assignment Roaster 🔥
+              Code Roaster 🔥
             </Heading>
           </MotionBox>
           <Spacer />
@@ -117,10 +117,6 @@ export function AppLayout({ children }: AppLayoutProps) {
                   </MenuItem>
                 </MenuList>
               </Menu>
-            ) : status === 'unauthenticated' ? (
-              <Button as={RouterLink} to="/login" size="sm" variant="ghost" leftIcon={<FiLogIn />}>
-                Sign in
-              </Button>
             ) : null}
           </HStack>
         </Flex>
