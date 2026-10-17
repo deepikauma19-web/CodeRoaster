@@ -44,7 +44,7 @@ describe('ShareButtons', () => {
 
     expect(toggle()).not.toBeChecked();
     expect(screen.queryByLabelText('Share link')).not.toBeInTheDocument();
-    expect(screen.getByText('Public pannina dhaan share panna mudiyum')).toBeInTheDocument();
+    expect(screen.getByText('Make it public to share')).toBeInTheDocument();
 
     await user.click(toggle());
     await waitFor(() => expect(mockToggle).toHaveBeenCalledWith(9, true));
@@ -52,7 +52,7 @@ describe('ShareButtons', () => {
 
     expect(await screen.findByLabelText('Share link')).toHaveValue(SHARE_URL);
     expect(toggle()).toBeChecked();
-    expect(await screen.findByText(/Public aayiduchu/)).toBeInTheDocument();
+    expect(await screen.findByText(/Your roast is public now/)).toBeInTheDocument();
 
     const encoded = encodeURIComponent(SHARE_URL);
     const whatsapp = screen.getByRole('link', { name: 'Share on WhatsApp' });
@@ -100,7 +100,7 @@ describe('ShareButtons', () => {
     mockToggle.mockRejectedValue(axiosError(409, { detail: 'Roast not completed yet' }));
     renderWithChakra(<Harness initial={makeRoast({ is_public: false })} onRoastChange={onRoastChange} />);
     await user.click(toggle());
-    expect(await screen.findByText('Share setting maatha mudiyala')).toBeInTheDocument();
+    expect(await screen.findByText('Could not change the share setting')).toBeInTheDocument();
     expect(screen.getByText('Roast not completed yet')).toBeInTheDocument();
     expect(onRoastChange).not.toHaveBeenCalled();
     expect(toggle()).not.toBeChecked();
@@ -109,6 +109,6 @@ describe('ShareButtons', () => {
   it('is disabled until the roast is completed', () => {
     renderWithChakra(<ShareButtons roast={makeRoast({ status: 'analyzing' })} onRoastChange={vi.fn()} />);
     expect(toggle()).toBeDisabled();
-    expect(screen.getByText(/Roast complete aana apram/)).toBeInTheDocument();
+    expect(screen.getByText(/You can share once the roast is complete/)).toBeInTheDocument();
   });
 });

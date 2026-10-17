@@ -35,7 +35,7 @@ export function DeleteRoastButton({ roastId, onDeleted, ...rest }: DeleteRoastBu
       toast({ status: 'success', title: 'Roast delete aachu.', duration: 3000 });
       onDeleted();
     } catch (err: unknown) {
-      toast({ status: 'error', title: 'Delete panna mudiyala', description: getErrorMessage(err), duration: 5000 });
+      toast({ status: 'error', title: 'Could not delete the roast', description: getErrorMessage(err), duration: 5000 });
     } finally {
       setIsDeleting(false);
     }
@@ -52,7 +52,7 @@ export function DeleteRoastButton({ roastId, onDeleted, ...rest }: DeleteRoastBu
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete this roast?
             </AlertDialogHeader>
-            <AlertDialogBody>Idhu permanent da. Share link-um vela seiyaadhu. Sure-aa?</AlertDialogBody>
+            <AlertDialogBody>This is permanent and the share link will stop working. Are you sure?</AlertDialogBody>
             <AlertDialogFooter gap={3}>
               <Button ref={cancelRef} variant="ghost" onClick={onClose} isDisabled={isDeleting}>
                 Cancel

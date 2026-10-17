@@ -24,8 +24,8 @@ from app.services.signals_service import compute_signals
 
 logger = logging.getLogger(__name__)
 
-MSG_UNEXPECTED = "Ennamo thappu aayiduchu da! Konjam neram kazhichu retry pannu."
-MSG_STALE = "Server restart aanadhala roast paathila nindhuduchu. Retry pannu!"
+MSG_UNEXPECTED = "Something went wrong. Please try again in a little while."
+MSG_STALE = "The roast was interrupted by a server restart. Please retry!"
 STALE_AFTER = timedelta(minutes=10)
 ACTIVE_STATUSES = (RoastStatus.pending, RoastStatus.fetching, RoastStatus.analyzing)
 

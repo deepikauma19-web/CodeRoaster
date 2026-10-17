@@ -5,79 +5,88 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 };
 
-/** Fire palette: amber → orange → red. */
+/** Brand palette: electric lime (the highlight colour). Always put dark ink text on it. */
 const brand = {
-  50: '#fff4e6',
-  100: '#ffe0bf',
-  200: '#ffc285',
-  300: '#ffa04d',
-  400: '#ff8126',
-  500: '#f9620f',
-  600: '#e2470b',
-  700: '#bb320d',
-  800: '#912812',
-  900: '#701f12',
+  50: '#f8fde3',
+  100: '#eefbb8',
+  200: '#e4f88a',
+  300: '#dbf560',
+  400: '#d4f23c',
+  500: '#c8ea1c',
+  600: '#a3b814',
+  700: '#7d8c10',
+  800: '#59630c',
+  900: '#3a4108',
+};
+
+/** Ink palette: near-black used for primary buttons, text and dark surfaces. */
+const ink = {
+  50: '#f4f4f2',
+  100: '#e6e6e3',
+  200: '#cfcfcb',
+  300: '#a9a9a4',
+  400: '#7a7a76',
+  500: '#0a0a0a',
+  600: '#262626',
+  700: '#3a3a3a',
+  800: '#161616',
+  900: '#0a0a0a',
 };
 
 const theme = extendTheme({
   config,
   colors: {
     brand,
-    ember: {
-      bg: '#0d0b0a',
-      surface: '#17130f',
-      border: 'rgba(255, 140, 60, 0.18)',
-    },
+    ink,
   },
   fonts: {
-    heading: `'Space Grotesk', 'Inter', system-ui, sans-serif`,
+    heading: `'Plus Jakarta Sans', 'Inter', system-ui, sans-serif`,
     body: `'Inter', system-ui, sans-serif`,
-    mono: `'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace`,
+    display: `'Space Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace`,
+    mono: `'Space Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace`,
   },
   semanticTokens: {
     colors: {
-      'bg.canvas': { default: '#fff8f2', _dark: 'ember.bg' },
-      'bg.surface': { default: 'white', _dark: 'ember.surface' },
-      'bg.card': { default: 'whiteAlpha.900', _dark: 'whiteAlpha.50' },
-      'bg.subtle': { default: 'orange.50', _dark: 'whiteAlpha.100' },
-      'bg.track': { default: 'orange.100', _dark: 'whiteAlpha.200' },
-      'bg.code': { default: 'orange.50', _dark: 'blackAlpha.400' },
-      'bg.header': { default: 'rgba(255, 248, 242, 0.85)', _dark: 'blackAlpha.600' },
-      'border.subtle': { default: 'orange.100', _dark: 'ember.border' },
-      'text.muted': { default: 'gray.600', _dark: 'whiteAlpha.700' },
-      'accent.fire': { default: 'brand.600', _dark: 'brand.400' },
+      'bg.canvas': { default: '#f4f4f2', _dark: 'ink.800' },
+      'bg.surface': { default: 'white', _dark: 'ink.800' },
+      'bg.card': { default: 'white', _dark: 'whiteAlpha.50' },
+      'bg.subtle': { default: 'ink.50', _dark: 'whiteAlpha.100' },
+      'bg.track': { default: 'ink.100', _dark: 'whiteAlpha.200' },
+      'bg.code': { default: 'ink.50', _dark: 'blackAlpha.400' },
+      'bg.header': { default: 'rgba(244, 244, 242, 0.85)', _dark: 'blackAlpha.600' },
+      'border.subtle': { default: 'ink.100', _dark: 'whiteAlpha.200' },
+      'text.muted': { default: 'ink.400', _dark: 'whiteAlpha.700' },
+      'accent.fire': { default: 'ink.500', _dark: 'brand.400' },
     },
   },
   styles: {
     global: {
       'html, body': {
         bg: 'bg.canvas',
-        color: 'chakra-body-text',
+        color: 'ink.500',
         minHeight: '100%',
       },
       body: {
-        bgImage:
-          'radial-gradient(circle at 12% 8%, rgba(255, 196, 160, 0.45), transparent 42%), radial-gradient(circle at 88% 12%, rgba(205, 190, 255, 0.40), transparent 40%), radial-gradient(circle at 50% 100%, rgba(255, 224, 235, 0.55), transparent 50%)',
-        bgAttachment: 'fixed',
         WebkitFontSmoothing: 'antialiased',
       },
       '::selection': {
-        bg: 'brand.500',
-        color: 'white',
+        bg: 'brand.400',
+        color: 'ink.500',
       },
     },
   },
   components: {
     Button: {
-      defaultProps: { colorScheme: 'brand' },
+      defaultProps: { colorScheme: 'ink' },
       baseStyle: { borderRadius: 'full', fontWeight: 600 },
     },
     Heading: {
-      baseStyle: { letterSpacing: '-0.02em' },
+      baseStyle: { letterSpacing: '-0.03em', fontWeight: 800 },
+    },
+    Badge: {
+      baseStyle: { textTransform: 'none', fontWeight: 600 },
     },
   },
 });
-
-export const fireGradient = 'linear(to-r, brand.400, red.500)';
 
 export default theme;

@@ -9,9 +9,9 @@ const MotionBox = motion.create(Box);
 type ActiveStatus = Extract<RoastStatus, 'pending' | 'fetching' | 'analyzing'>;
 
 const LINES: Record<ActiveStatus, readonly string[]> = {
-  pending: ['Queue-la wait pannuren da…', 'Chili-a ready pannuren 🌶️', 'Konjam porumai, roast varudhu…'],
-  fetching: ['Repo-va clone pannuren…', 'Files-a ellam eduthuttu varen…', 'README irukka nu paakuren 👀'],
-  analyzing: ['Code-a padikkuren da…', 'Variable names-a paathu sirikkuren 😂', 'Roast ready pannuren 🔥'],
+  pending: ['Waiting in the queue, like it is a cinema ticket line…', 'Sharpening the roast knives 🔪🌶️', 'Hang tight, the roast is marinating…'],
+  fetching: ['Cloning the repo… no judgement yet.', 'Gathering all the files (all 47 of them)…', 'Checking if there is a README 👀 (please be there)'],
+  analyzing: ['Reading your code. Slowly. With popcorn 🍿', 'Trying not to laugh at the variable names 😂', 'The roast is out of the oven 🔥'],
 };
 
 const STEPS: readonly { status: ActiveStatus; label: string }[] = [
@@ -29,7 +29,7 @@ export interface RoastLoaderProps {
 const toActive = (status: RoastStatus): ActiveStatus =>
   status === 'fetching' || status === 'analyzing' ? status : 'pending';
 
-/** Rotating Tanglish loading lines plus a 3-step progress indicator. */
+/** Rotating loading lines plus a 3-step progress indicator. */
 export function RoastLoader({ status }: RoastLoaderProps) {
   const active = toActive(status);
   const lines = LINES[active];

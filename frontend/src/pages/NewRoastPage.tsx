@@ -6,10 +6,9 @@ import { IntensityPicker, RecentRoasts, RepoUrlInput, RoastMeButton } from '../c
 import { DEFAULT_INTENSITY, isValidRepoUrl } from '../lib/roastUi';
 import { getErrorMessage } from '../services/api';
 import { createRoast } from '../services/roastApi';
-import { fireGradient } from '../theme';
 import type { RoastIntensity } from '../types/roast';
 
-const INVALID_URL_MESSAGE = 'Valid GitHub repo URL kudu da — e.g. https://github.com/owner/repo';
+const INVALID_URL_MESSAGE = 'Enter a valid GitHub repo URL, e.g. https://github.com/owner/repo';
 
 export default function NewRoastPage() {
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ export default function NewRoastPage() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const validate = (value: string): string | null => {
-    if (!value.trim()) return 'Repo URL podu da!';
+    if (!value.trim()) return 'Please enter a repo URL!';
     return isValidRepoUrl(value) ? null : INVALID_URL_MESSAGE;
   };
 
@@ -58,15 +57,15 @@ export default function NewRoastPage() {
   return (
     <PageWrapper maxW="container.md">
       <Stack spacing={2} mb={8} textAlign={{ base: 'left', md: 'center' }}>
-        <Heading as="h1" size={{ base: 'xl', md: '2xl' }}>
-          Un repo-va{' '}
-          <chakra.span bgGradient={fireGradient} bgClip="text">
-            roast
-          </chakra.span>{' '}
-          pannalaama? 🔥
+        <Heading as="h1" size={{ base: 'xl', md: '2xl' }} fontFamily="display">
+          Ready to get your repo{' '}
+          <chakra.span bg="brand.400" px={2} borderRadius="md">
+            roasted
+          </chakra.span>
+          ? 🔥
         </Heading>
         <Text color="text.muted" fontSize={{ base: 'md', md: 'lg' }}>
-          Public GitHub repo link podu, spice level choose pannu. Tanglish roast + score + fix tips varum.
+          Paste a public GitHub repo link and choose a spice level. You will get a roast, a score and tips to fix your code.
         </Text>
       </Stack>
 

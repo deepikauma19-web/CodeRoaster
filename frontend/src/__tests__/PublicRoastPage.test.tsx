@@ -35,12 +35,12 @@ describe('PublicRoastPage', () => {
     expect(screen.getByTestId('author-chip')).toHaveTextContent('Deepa');
     expect(screen.getByRole('img', { name: 'Score 35 out of 100: Burnt 🔥' })).toBeInTheDocument();
     expect(screen.getByTestId('score-breakdown')).toBeInTheDocument();
-    expect(screen.getByTestId('roast-card')).toHaveTextContent('Semma comedy da.');
+    expect(screen.getByTestId('roast-card')).toHaveTextContent('Comedy gold.');
     expect(screen.getByText('Remove API key')).toBeInTheDocument();
     // Read-only tips: no checkboxes on the public page.
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     expect(screen.getByLabelText('Intensity: Extra Spicy')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Un repo-vum roast pannalaama/ })).toHaveAttribute('href', '/login');
+    expect(screen.getByRole('link', { name: /Want your repo roasted too/ })).toHaveAttribute('href', '/login');
     await waitFor(() => expect(document.title).toBe('octo/todo-app – 35/100 | Code Roaster'));
   });
 
@@ -57,14 +57,14 @@ describe('PublicRoastPage', () => {
   it('404 shows the unavailable state', async () => {
     mockGetPublic.mockRejectedValue(axiosError(404, { detail: 'Not found' }));
     renderPage('gone');
-    expect(await screen.findByTestId('public-roast-unavailable')).toHaveTextContent(/private-aa irukku illa delete/);
+    expect(await screen.findByTestId('public-roast-unavailable')).toHaveTextContent(/private or has been deleted/);
     await waitFor(() => expect(document.title).toBe('Roast not found | Code Roaster'));
   });
 
   it('other errors show a load failure with message', async () => {
     mockGetPublic.mockRejectedValue(axiosError(500, { detail: 'kaboom' }));
     renderPage();
-    expect(await screen.findByTestId('public-roast-unavailable')).toHaveTextContent('Roast load panna mudiyala');
+    expect(await screen.findByTestId('public-roast-unavailable')).toHaveTextContent('Could not load the roast');
     expect(screen.getByText('kaboom')).toBeInTheDocument();
   });
 });

@@ -39,13 +39,13 @@ export function RepoUrlInput({ value, onChange, onBlur, error, isDisabled = fals
           onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
           onBlur={onBlur}
           borderRadius="xl"
-          focusBorderColor="brand.400"
+          focusBorderColor="ink.500"
         />
       </InputGroup>
       {error ? (
         <FormErrorMessage>{error}</FormErrorMessage>
       ) : (
-        <FormHelperText color="text.muted">Public repos mattum. Private repo-va roast panna mudiyaadhu da.</FormHelperText>
+        <FormHelperText color="text.muted">Public repos only. Private repos cannot be roasted.</FormHelperText>
       )}
     </FormControl>
   );

@@ -63,7 +63,7 @@ const markdownComponents: Components = {
   img: () => null,
 };
 
-/** Renders the Tanglish roast markdown. No rehype-raw: HTML in the source is skipped. */
+/** Renders the roast markdown. No rehype-raw: HTML in the source is skipped. */
 export function RoastCard({ markdown, title = 'The Roast 🔥' }: RoastCardProps) {
   return (
     <GlassCard static data-testid="roast-card">

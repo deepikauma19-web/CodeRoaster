@@ -10,7 +10,7 @@ export const POLL_TIMEOUT_MS = 3 * 60 * 1000;
 /** Consecutive /status failures tolerated before giving up. */
 const MAX_POLL_FAILURES = 3;
 
-export const POLL_TIMEOUT_MESSAGE = 'Roast romba neram aagudhu da. Konja neram kalichu refresh pannu.';
+export const POLL_TIMEOUT_MESSAGE = 'The roast is taking too long. Please refresh in a little while.';
 
 export interface UseRoastPollingResult {
   roast: Roast | null;

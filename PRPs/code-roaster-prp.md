@@ -25,7 +25,7 @@
 **MVP Scope:**
 - [ ] Google (Gmail) sign-in
 - [ ] Submit a public GitHub repo → async analysis
-- [ ] Tanglish roast + overall score (0–100) + 5-category breakdown + 3–7 tips
+- [ ] English roast + overall score (0–100) + 5-category breakdown + 3–7 tips
 - [ ] Intensity selector: Mild / Medium / Extra Spicy
 - [ ] Shareable public roast page + OG image card
 - [ ] Admin panel: users, roast moderation, platform stats
@@ -147,7 +147,7 @@ class PublicRoastResponse(BaseModel):   # NO email, NO user_id, NO id
 
 class LLMRoastOutput(BaseModel):        # validated from OpenAI JSON output
     summary: str
-    roast: str                           # Tanglish markdown, ≤ 2500 chars
+    roast: str                           # English markdown, ≤ 2500 chars
     scores: ScoreBreakdown
     tips: conlist(Tip, min_length=3, max_length=7)
 ```
@@ -227,7 +227,7 @@ Shared: `AuthContext`, `useAuth`, `ProtectedRoute`, `AdminRoute`, `services/api.
 | security | secrets in code, `.env` committed, `.gitignore`, input validation, dependency pinning |
 
 **Prompt rules (base):**
-- Write the roast in Tanglish: Tamil in Latin script mixed with English. Use 4–8 short punchy paragraphs or bullets that reference **specific files and lines of code**.
+- Write the roast in clear, funny, human-sounding English. Use 4–8 short punchy paragraphs or bullets that reference **specific files and lines of code**.
 - Roast the code, never the person. Never mention caste, religion, gender, appearance, region, or family. No slurs or profanity.
 - Write tips in clear English. Each tip is concrete and actionable, and references a file where possible.
 - Never output secrets. Refer to them only in masked form.
@@ -243,19 +243,19 @@ Shared: `AuthContext`, `useAuth`, `ProtectedRoute`, `AdminRoute`, `services/api.
 | DELETE | /api/v1/roasts/{id} | Delete → 204 |
 
 Error mapping: invalid URL → 400, not owner → 404, retry on a non-failed roast → 409. Repo errors appear as `failed` status with one of these messages:
-- `"Repo-ve kaanom da! Public-aa irukka nu check pannu."` (not found or private)
-- `"Repo romba periya-aa irukku, top files mattum paathom."` (truncated, a warning only, not a failure)
+- `"Repo not found. Check that it exists and is public."` (not found or private)
+- `"This repo is very large, so only the top files were analysed."` (truncated, a warning only, not a failure)
 - `"Repo kaali-aa irukku!"` (no code files)
 
 **Frontend Pages:**
 | Route | Page | Components |
 |-------|------|------------|
 | /roast/new | NewRoastPage | RepoUrlInput (client-side regex validation), IntensityPicker (Module 3), RoastMeButton (Framer Motion fire animation) |
-| /roasts/:id | RoastResultPage | RoastLoader (rotating Tanglish loading lines per status: "Repo-va clone pannuren…", "Code-a padikkuren da…", "Roast ready pannuren 🔥"), ScoreGauge (animated 0→score, colour by band), ScoreBreakdownBars, RoastCard (react-markdown, no raw HTML), TipsList (priority badges, checkbox UI), RepoMetaBar (languages, files analysed, commit), ShareButtons (Module 4), RetryButton / DeleteButton |
+| /roasts/:id | RoastResultPage | RoastLoader (rotating loading lines per status: "Cloning the repo…", "Reading your code…", "Getting the roast ready 🔥"), ScoreGauge (animated 0→score, colour by band), ScoreBreakdownBars, RoastCard (react-markdown, no raw HTML), TipsList (priority badges, checkbox UI), RepoMetaBar (languages, files analysed, commit), ShareButtons (Module 4), RetryButton / DeleteButton |
 
 Hook: `useRoastPolling(id)` polls `/status` every 2 s while the status is not terminal, then fetches the full roast. Stops polling on unmount, and times out after 3 min with an error state.
 
-Score bands: 0–39 "Burnt 🔥" (red), 40–59 "Half-boiled" (orange), 60–79 "Decent da" (yellow), 80–100 "Semma! 🏆" (green).
+Score bands: 0–39 "Burnt 🔥" (red), 40–59 "Half-boiled" (orange), 60–79 "Decent" (yellow), 80–100 "Excellent! 🏆" (green).
 
 ---
 
@@ -263,9 +263,9 @@ Score bands: 0–39 "Burnt 🔥" (red), 40–59 "Half-boiled" (orange), 60–79 
 **Agents:** BACKEND-AGENT + FRONTEND-AGENT
 
 **Backend:** `services/prompts/{mild,medium,extra_spicy}.py`. Each exports `TONE: str` that is appended to the base prompt. Selected by `RoastIntensity` enum through a dict lookup.
-- **mild**: friendly senior "anna/akka" mentor, gentle teasing, encouraging closer.
+- **mild**: friendly senior mentor, gentle teasing, encouraging closer.
 - **medium**: college-friend roast, direct and punchy, light movie-dialogue references.
-- **extra_spicy**: savage "Madras local" style, maximum sarcasm, still bound by every safety rule.
+- **extra_spicy**: savage stand-up comic style, maximum sarcasm, still bound by every safety rule.
 
 **Frontend:**
 | Component | Description |
@@ -325,7 +325,7 @@ Layout: `AdminLayout` with sidebar. Wrapped in `AdminRoute`.
 - `AppLayout`: top nav (logo, "New Roast", avatar menu with Profile / Admin (if admin) / Logout)
 - Chakra theme: dark-first, fire palette (brand orange/red), Inter + a display font
 - Routes: `/` redirects to `/roast/new` when logged in, otherwise `/login`
-- `ErrorBoundary`, 404 page ("Indha page-ae illa da")
+- `ErrorBoundary`, 404 page ("This page does not exist")
 
 ---
 

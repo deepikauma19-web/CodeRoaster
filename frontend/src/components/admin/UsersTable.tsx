@@ -57,7 +57,7 @@ export function UsersTable({ users, isLoading, busyUserId, onToggle }: UsersTabl
             <Tr>
               <Td colSpan={COLUMNS}>
                 <Text textAlign="center" py={8} color="text.muted">
-                  No users found da 🤷
+                  No users found. Spooky quiet in here 🤷
                 </Text>
               </Td>
             </Tr>
@@ -92,7 +92,7 @@ export function UsersTable({ users, isLoading, busyUserId, onToggle }: UsersTabl
                   </Td>
                   <Td>
                     <Switch
-                      colorScheme="brand"
+                      colorScheme="ink"
                       isChecked={user.is_admin}
                       isDisabled={busy}
                       aria-label={`${user.is_admin ? 'Remove admin from' : 'Make admin'} ${user.email}`}

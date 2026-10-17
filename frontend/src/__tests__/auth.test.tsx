@@ -167,7 +167,7 @@ describe('AuthCallbackPage', () => {
   });
 
   it.each([
-    ['#error=invalid_state', /Session timeout/],
+    ['#error=invalid_state', /Session timed out/],
     ['#error=something_weird', /Edho thappa poachu/],
     ['', /Login details kaanom/],
   ])('hash %j shows an error with Try again', async (hash, title) => {
@@ -184,7 +184,7 @@ describe('AuthCallbackPage', () => {
     window.history.replaceState(null, '', '/auth/callback#access_token=bad');
     const completeLogin = vi.fn().mockRejectedValue(new Error('401'));
     renderCallback(makeAuthValue({ status: 'loading', completeLogin }));
-    expect(await screen.findByRole('heading', { name: /Google kooda pesa mudiyala/ })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /Could not reach Google/ })).toBeInTheDocument();
   });
 });
 

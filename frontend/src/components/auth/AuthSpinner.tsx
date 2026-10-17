@@ -9,7 +9,7 @@ export function AuthSpinner({ label = 'Checking your session…' }: AuthSpinnerP
   return (
     <Center py={20} role="status" aria-live="polite">
       <Stack align="center" spacing={4}>
-        <Spinner size="xl" color="brand.400" thickness="4px" label={label} />
+        <Spinner size="xl" color="ink.500" thickness="4px" label={label} />
         <Text color="text.muted">{label}</Text>
       </Stack>
     </Center>

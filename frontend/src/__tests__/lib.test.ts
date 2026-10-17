@@ -20,10 +20,10 @@ describe('getScoreBand labels', () => {
     [39, 'Burnt 🔥'],
     [40, 'Half-boiled'],
     [59, 'Half-boiled'],
-    [60, 'Decent da'],
-    [79, 'Decent da'],
-    [80, 'Semma! 🏆'],
-    [100, 'Semma! 🏆'],
+    [60, 'Decent'],
+    [79, 'Decent'],
+    [80, 'Excellent! 🏆'],
+    [100, 'Excellent! 🏆'],
   ])('score %i → %s', (score, label) => {
     expect(getScoreBand(score).label).toBe(label);
   });
@@ -116,7 +116,7 @@ describe('getErrorMessage', () => {
     expect(getErrorMessage(axiosError(500, {}))).toBe('Request failed with status code 500');
   });
   it('handles network errors (no response)', () => {
-    expect(getErrorMessage(new AxiosError('Network Error'))).toMatch(/Network check pannu/);
+    expect(getErrorMessage(new AxiosError('Network Error'))).toMatch(/check your network/);
   });
   it('handles Error, string and unknown values', () => {
     expect(getErrorMessage(new Error('plain'))).toBe('plain');

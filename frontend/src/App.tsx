@@ -23,7 +23,7 @@ const AdminRoastsPage = lazy(() => import('./pages/admin/AdminRoastsPage'));
 function PageFallback() {
   return (
     <Center py={20}>
-      <Spinner size="xl" color="brand.400" thickness="4px" />
+      <Spinner size="xl" color="ink.500" thickness="4px" />
     </Center>
   );
 }

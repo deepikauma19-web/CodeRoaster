@@ -31,7 +31,7 @@ export default function AdminDashboardPage() {
       <Flex justify="space-between" align={{ base: 'flex-start', sm: 'center' }} mb={6} gap={3} wrap="wrap">
         <Box>
           <Heading size="lg">Admin Dashboard</Heading>
-          <Text color="text.muted">Roast factory-oda health check 🔥</Text>
+          <Text color="text.muted">Roast factory health check 🔥</Text>
         </Box>
         <Button
           leftIcon={<FiRefreshCw />}

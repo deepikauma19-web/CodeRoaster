@@ -156,7 +156,7 @@ export default function AdminRoastsPage() {
       {rangeInvalid && (
         <Alert status="warning" borderRadius="xl" mb={4}>
           <AlertIcon />
-          <AlertDescription>"From" date "To" date-ku munnaadi irukkanum.</AlertDescription>
+          <AlertDescription>The "From" date must be before the "To" date.</AlertDescription>
         </Alert>
       )}
 
@@ -180,10 +180,11 @@ export default function AdminRoastsPage() {
         title="Delete roast?"
         body={
           <Text>
+            Permanently delete the roast of{' '}
             <strong>
               {target?.repo_owner}/{target?.repo_name}
             </strong>{' '}
-            ({target?.user_email}) roast-ah permanent-ah delete pannidalaama? Undo panna mudiyaadhu.
+            ({target?.user_email})? This cannot be undone.
           </Text>
         }
         confirmLabel="Delete"

@@ -94,12 +94,12 @@ export const getErrorMessage = (err: unknown): string => {
       }
       if (typeof body.message === 'string') return body.message;
     }
-    if (!axiosErr.response) return 'Server-ah reach panna mudiyala. Network check pannu.';
+    if (!axiosErr.response) return 'Could not reach the server. Please check your network.';
     return axiosErr.message;
   }
   if (err instanceof Error) return err.message;
   if (typeof err === 'string') return err;
-  return 'Something went wrong da. Try again.';
+  return 'Something went wrong. Please try again.';
 };
 
 export default api;

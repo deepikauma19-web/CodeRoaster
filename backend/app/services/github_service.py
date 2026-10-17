@@ -37,12 +37,12 @@ TRUNCATION_MARKER = "\n... [truncated by Code Roaster]\n"
 
 REPO_URL_RE = re.compile(r"^https://github\.com/([A-Za-z0-9-]+)/([A-Za-z0-9._-]+?)/?$")
 
-# --- User-safe (Tanglish) error messages ---------------------------------------------
-MSG_REPO_NOT_FOUND = "Repo-ve kaanom da! Public-aa irukka nu check pannu."
-MSG_REPO_TRUNCATED = "Repo romba periya-aa irukku, top files mattum paathom."
-MSG_REPO_EMPTY = "Repo kaali-aa irukku!"
-MSG_GITHUB_RATE_LIMIT = "GitHub busy-aa irukku, konjam neram kazhichu try pannu (rate limit)"
-MSG_GITHUB_ERROR = "GitHub-la irundhu repo-va edukka mudiyala. Konjam neram kazhichu retry pannu."
+# --- User-safe error messages ---------------------------------------------
+MSG_REPO_NOT_FOUND = "Repo not found. Check that it exists and is public."
+MSG_REPO_TRUNCATED = "This repo is very large, so only the top files were analysed."
+MSG_REPO_EMPTY = "This repo is empty!"
+MSG_GITHUB_RATE_LIMIT = "GitHub is busy right now (rate limit). Please try again in a little while."
+MSG_GITHUB_ERROR = "Could not fetch the repo from GitHub. Please try again in a little while."
 MSG_INVALID_URL = (
     "Invalid GitHub repo URL. Use the format https://github.com/<owner>/<repo> "
     "(public repos only, no /tree/... or /blob/... paths)."
@@ -53,7 +53,7 @@ MSG_INVALID_URL = (
 class RoastPipelineError(Exception):
     """Base error carrying a user-safe message for `Roast.error_message`."""
 
-    user_message: str = "Ennamo thappu aayiduchu da! Konjam neram kazhichu retry pannu."
+    user_message: str = "Something went wrong. Please try again in a little while."
 
     def __init__(self, user_message: str | None = None, *, log_detail: str | None = None) -> None:
         if user_message:

@@ -63,12 +63,12 @@ function RoastCta(): JSX.Element {
   return (
     <GlassCard static textAlign="center" py={{ base: 8, md: 10 }} borderColor="brand.500">
       <Stack spacing={4} align="center">
-        <Heading size={{ base: 'md', md: 'lg' }}>Unakkum oru roast venuma? 😏🔥</Heading>
+        <Heading size={{ base: 'md', md: 'lg' }}>Want a roast of your own? 😏🔥</Heading>
         <Text color="text.muted" maxW="md">
-          GitHub repo link podu, AI unakku Tanglish-la semma roast + fix panna tips tharum.
+          Paste a GitHub repo link and the AI will give you a hilarious roast plus tips to fix your code.
         </Text>
         <GradientButton to="/login" size="lg" whiteSpace="normal" h="auto" py={3}>
-          Un repo-vum roast pannalaama? →
+          Want your repo roasted too? →
         </GradientButton>
       </Stack>
     </GlassCard>
@@ -141,8 +141,8 @@ export default function PublicRoastPage(): JSX.Element {
             <Icon as={FiLock} boxSize={10} color="accent.fire" />
             <Heading size="md" data-testid="public-roast-unavailable">
               {isNotFound
-                ? 'Indha roast private-aa irukku illa delete aayiduchu'
-                : 'Roast load panna mudiyala 😵'}
+                ? 'This roast is private or has been deleted'
+                : 'Could not load the roast 😵'}
             </Heading>
             {!isNotFound && <Text color="text.muted">{state.message}</Text>}
           </Stack>
@@ -205,7 +205,7 @@ export default function PublicRoastPage(): JSX.Element {
 
         <GlassCard static>
           <Heading as="h2" size="md" mb={4}>
-            Fix panna tips 🛠️
+            Tips to fix it 🛠️
           </Heading>
           <TipsList tips={roast.tips} interactive={false} />
         </GlassCard>

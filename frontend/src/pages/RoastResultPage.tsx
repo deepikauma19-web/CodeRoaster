@@ -41,12 +41,12 @@ function NotFoundState() {
         🕵️
       </Text>
       <Heading as="h1" size="lg" mt={2}>
-        Indha roast-ae illa da
+        This roast has vanished into thin air
       </Heading>
       <Text color="text.muted" mt={2} mb={6}>
-        Delete aagirukkalaam, illa idhu unnoda roast illa.
+        It may have been deleted, or it does not belong to you.
       </Text>
-      <GradientButton to="/roast/new">New roast pannu 🔥</GradientButton>
+      <GradientButton to="/roast/new">New roast 🔥</GradientButton>
     </GlassCard>
   );
 }
@@ -67,7 +67,7 @@ function FailedState({ roast, onRetried, onDeleted }: FailedStateProps) {
       await retryRoast(roast.id);
       onRetried();
     } catch (err: unknown) {
-      toast({ status: 'error', title: 'Retry panna mudiyala', description: getErrorMessage(err), duration: 5000 });
+      toast({ status: 'error', title: 'Could not retry', description: getErrorMessage(err), duration: 5000 });
     } finally {
       setIsRetrying(false);
     }
@@ -81,7 +81,7 @@ function FailedState({ roast, onRetried, onDeleted }: FailedStateProps) {
         </Heading>
         <Alert status="error" borderRadius="xl">
           <AlertIcon />
-          <AlertDescription>{roast.error_message ?? 'Edho thappu nadandhuduchu. Retry pannu.'}</AlertDescription>
+          <AlertDescription>{roast.error_message ?? 'Something went wrong. Please retry.'}</AlertDescription>
         </Alert>
         <Flex gap={3} wrap="wrap">
           <Button leftIcon={<FaRedo />} onClick={() => void handleRetry()} isLoading={isRetrying}>
@@ -140,7 +140,7 @@ function CompletedState({ roast, onRoastChange, onDeleted }: CompletedStateProps
 
       <GlassCard static>
         <Heading as="h2" size="md" mb={4}>
-          Fix pannu da — tips ✅
+          Fix it — tips ✅
         </Heading>
         <TipsList tips={roast.tips} interactive />
       </GlassCard>

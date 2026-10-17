@@ -18,20 +18,20 @@ const KNOWN_ERRORS: readonly OAuthErrorCode[] = ['invalid_state', 'oauth_failed'
 
 const ERROR_MESSAGES: Record<CallbackErrorCode, { title: string; description: string }> = {
   invalid_state: {
-    title: 'Session timeout aayiduchu ⏳',
-    description: 'Your login session expired or was tampered with. Oru thadava thirumba try pannu.',
+    title: 'Session timed out ⏳',
+    description: 'Your login session expired or was tampered with. Please try again.',
   },
   oauth_failed: {
-    title: 'Google kooda pesa mudiyala 😵',
-    description: "We couldn't complete Google sign-in. Konjam neram kazhichu try pannu.",
+    title: 'Could not reach Google 😵',
+    description: "We couldn't complete Google sign-in. Please try again in a little while.",
   },
   account_deactivated: {
     title: 'Account deactivate aagiduchu 🚫',
-    description: 'Your account has been deactivated. Admin-a contact pannu if you think this is a mistake.',
+    description: 'Your account has been deactivated. Contact an admin if you think this is a mistake.',
   },
   missing_token: {
     title: 'Login details kaanom 🤔',
-    description: 'No login token was found in the callback. Thirumba sign in pannu.',
+    description: 'No login token was found in the callback. Please sign in again.',
   },
   unknown: {
     title: 'Edho thappa poachu 😬',
@@ -89,7 +89,7 @@ export default function AuthCallbackPage() {
   }, [completeLogin, navigate, parsed.accessToken]);
 
   if (!error) {
-    return <AuthSpinner label="Signing you in… konjam wait pannu 🔥" />;
+    return <AuthSpinner label="Signing you in… hang tight 🔥" />;
   }
 
   const message = ERROR_MESSAGES[error];

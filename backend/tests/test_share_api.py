@@ -148,7 +148,7 @@ def test_public_response_tolerates_malformed_data(
 def test_card_png(client: TestClient, make_roast: Callable[..., Roast], user: User) -> None:
     roast = make_roast(
         user,
-        roast_text="## Heading\n**Enna da** idhu 🔥🔥 " + "very long words " * 20,
+        roast_text="## Heading\n**What is** this 🔥🔥 " + "very long words " * 20,
         overall_score=91,
         intensity=RoastIntensity.mild,
     )
@@ -227,17 +227,17 @@ def test_share_html_falls_back_to_roast_line_and_band(
         summary="",
         share_slug="abc",
         overall_score=None,
-        roast_text="## Intro\nEnna da idhu, README-ae illa!",
+        roast_text="## Intro\nThere is no README here!",
     )
     html = share_service.render_share_html(roast)
-    assert "Enna da idhu, README-ae illa!" in html
+    assert "There is no README here!" in html
     roast.roast_text = None
     html = share_service.render_share_html(roast)
     assert "Burnt — Code Roaster" in html
 
 
 @pytest.mark.parametrize(
-    ("score", "band"), [(95, "Semma!"), (60, "Decent da"), (40, "Half-boiled"), (0, "Burnt")]
+    ("score", "band"), [(95, "Excellent!"), (60, "Decent"), (40, "Half-boiled"), (0, "Burnt")]
 )
 def test_score_band(score: int, band: str) -> None:
     assert share_service.score_band(score) == band

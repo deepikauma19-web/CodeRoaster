@@ -83,7 +83,7 @@ export default function AdminUsersPage() {
       const conflict = axios.isAxiosError(err) && err.response?.status === 409;
       toast({
         status: conflict ? 'warning' : 'error',
-        title: conflict ? 'Not allowed da' : 'Update failed',
+        title: conflict ? 'Not allowed' : 'Update failed',
         description: getErrorMessage(err),
         duration: 5000,
         isClosable: true,
@@ -101,7 +101,7 @@ export default function AdminUsersPage() {
     <PageWrapper maxW="container.xl">
       <Box mb={6}>
         <Heading size="lg">Users</Heading>
-        <Text color="text.muted">Yaar yaar roast pannaanga-nu paaru 👀</Text>
+        <Text color="text.muted">See who has been roasting 👀</Text>
       </Box>
 
       <InputGroup mb={4} maxW={{ base: 'full', md: 'sm' }}>

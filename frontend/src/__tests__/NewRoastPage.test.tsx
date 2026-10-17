@@ -37,7 +37,7 @@ describe('NewRoastPage', () => {
     renderPage();
     await user.type(urlInput(), 'https://gitlab.com/foo/bar');
     await user.click(submitButton());
-    expect(await screen.findByText(/Valid GitHub repo URL kudu da/)).toBeInTheDocument();
+    expect(await screen.findByText(/Enter a valid GitHub repo URL/)).toBeInTheDocument();
     expect(urlInput()).toHaveAttribute('aria-invalid', 'true');
     expect(mockCreate).not.toHaveBeenCalled();
   });
@@ -46,7 +46,7 @@ describe('NewRoastPage', () => {
     const user = userEvent.setup();
     renderPage();
     await user.click(submitButton());
-    expect(await screen.findByText('Repo URL podu da!')).toBeInTheDocument();
+    expect(await screen.findByText('Please enter a repo URL!')).toBeInTheDocument();
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
@@ -55,10 +55,10 @@ describe('NewRoastPage', () => {
     renderPage();
     await user.type(urlInput(), 'nope');
     await user.tab();
-    expect(await screen.findByText(/Valid GitHub repo URL kudu da/)).toBeInTheDocument();
+    expect(await screen.findByText(/Enter a valid GitHub repo URL/)).toBeInTheDocument();
     await user.clear(urlInput());
     await user.type(urlInput(), 'https://github.com/a/b');
-    expect(screen.queryByText(/Valid GitHub repo URL kudu da/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Enter a valid GitHub repo URL/)).not.toBeInTheDocument();
   });
 
   it('submits {repo_url, intensity} and navigates to /roasts/:id', async () => {
@@ -113,7 +113,7 @@ describe('NewRoastPage', () => {
 
   it('shows empty and error states for recent roasts', async () => {
     const { unmount } = renderPage();
-    expect(await screen.findByText(/Innum oru roast-um illa/)).toBeInTheDocument();
+    expect(await screen.findByText(/No roasts yet/)).toBeInTheDocument();
     unmount();
     mockList.mockRejectedValue(axiosError(500, { detail: 'list failed' }));
     renderPage();

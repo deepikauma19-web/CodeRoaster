@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return (
         <Stack align="center" justify="center" minH="100vh" spacing={4} px={4} textAlign="center">
           <Heading size="lg">Aiyo, edho thappa poachu 😵</Heading>
-          <Text color="text.muted">Something broke. Reload panni paaru.</Text>
+          <Text color="text.muted">Something broke. It was probably not your code this time. Please reload the page.</Text>
           <Button onClick={this.handleReload}>Reload</Button>
         </Stack>
       );

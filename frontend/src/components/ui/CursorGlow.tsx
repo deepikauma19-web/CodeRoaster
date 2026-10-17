@@ -51,7 +51,7 @@ export function CursorGlow() {
       borderRadius="full"
       pointerEvents="none"
       zIndex={0}
-      bgGradient="radial(rgba(170, 45, 10, 0.42), rgba(110, 30, 80, 0.22) 45%, transparent 70%)"
+      bgGradient="radial(rgba(212, 242, 60, 0.35), rgba(212, 242, 60, 0.12) 45%, transparent 70%)"
       filter="blur(6px)"
       initial={{ opacity: 0, x: point.x - SIZE / 2, y: point.y - SIZE / 2 }}
       animate={{ opacity: 1, x: point.x - SIZE / 2, y: point.y - SIZE / 2 }}

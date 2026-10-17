@@ -32,12 +32,13 @@ FONT_PATH = Path(__file__).resolve().parent.parent / "assets" / "fonts" / "Inter
 RGB = tuple[int, int, int]
 Font = ImageFont.FreeTypeFont | ImageFont.ImageFont
 
-BG_TOP: RGB = (26, 10, 8)
-BG_BOTTOM: RGB = (70, 18, 6)
-GLOW: RGB = (255, 96, 20)
-TEXT: RGB = (255, 246, 236)
-MUTED: RGB = (230, 190, 165)
+BG_TOP: RGB = (10, 10, 10)
+BG_BOTTOM: RGB = (28, 30, 22)
+GLOW: RGB = (212, 242, 60)
+TEXT: RGB = (255, 255, 255)
+MUTED: RGB = (176, 176, 170)
 ORANGE: RGB = (255, 122, 38)
+LIME: RGB = (212, 242, 60)
 CHILI_RED: RGB = (226, 38, 38)
 CHILI_STEM: RGB = (64, 168, 72)
 CHILI_OFF: RGB = (110, 70, 60)
@@ -45,8 +46,8 @@ CHILI_OFF: RGB = (110, 70, 60)
 BAND_COLOURS: dict[str, RGB] = {
     "Burnt": (239, 68, 68),
     "Half-boiled": (249, 115, 22),
-    "Decent da": (250, 204, 21),
-    "Semma!": (34, 197, 94),
+    "Decent": (250, 204, 21),
+    "Excellent!": (34, 197, 94),
 }
 
 INTENSITY_LEVEL: dict[RoastIntensity, tuple[int, str]] = {
@@ -147,7 +148,7 @@ def _wrap(
 
 
 def _background() -> Image.Image:
-    """Dark vertical gradient with a warm radial glow in the lower right."""
+    """Dark vertical gradient with a soft lime radial glow in the lower right."""
     mask = Image.linear_gradient("L").resize((WIDTH, HEIGHT))
     base = Image.composite(
         Image.new("RGB", (WIDTH, HEIGHT), BG_BOTTOM),
@@ -206,7 +207,7 @@ def render_card(data: CardData) -> bytes:
     wordmark_font = _font(30, 800)
     draw.text((margin + 40, 50), "Code Roaster", font=wordmark_font, fill=TEXT)
     wm_w = _text_width(draw, "Code Roaster ", wordmark_font)
-    draw.text((margin + 40 + wm_w, 50), "2.0", font=wordmark_font, fill=ORANGE)
+    draw.text((margin + 40 + wm_w, 50), "2.0", font=wordmark_font, fill=LIME)
 
     # Intensity chilis (top right)
     level, label = INTENSITY_LEVEL.get(data.intensity, (2, "MEDIUM"))
@@ -219,7 +220,7 @@ def render_card(data: CardData) -> bytes:
 
     # Score panel (right)
     panel = (WIDTH - margin - 360, 150, WIDTH - margin, 470)
-    draw.rounded_rectangle(panel, radius=28, fill=(20, 8, 6), outline=band_colour, width=4)
+    draw.rounded_rectangle(panel, radius=28, fill=(18, 18, 18), outline=band_colour, width=4)
     score_font = _font(150, 900)
     out_of_font = _font(40, 700)
     score_text = str(data.score)
@@ -233,7 +234,7 @@ def render_card(data: CardData) -> bytes:
     bw = _text_width(draw, band, band_font)
     pill = (cx - bw / 2 - 24, 365, cx + bw / 2 + 24, 425)
     draw.rounded_rectangle(pill, radius=30, fill=band_colour)
-    draw.text((cx, 395), band, font=band_font, fill=(24, 10, 6), anchor="mm")
+    draw.text((cx, 395), band, font=band_font, fill=(10, 10, 10), anchor="mm")
 
     # Repo name (left column)
     left_w = panel[0] - margin - 48
@@ -254,18 +255,18 @@ def render_card(data: CardData) -> bytes:
     if line:
         quote_font = _font(30, 500)
         wrapped = _wrap(draw, line, quote_font, left_w - 28, 3)
-        draw.rectangle((margin, 306, margin + 6, 306 + len(wrapped) * 42 - 8), fill=ORANGE)
+        draw.rectangle((margin, 306, margin + 6, 306 + len(wrapped) * 42 - 8), fill=LIME)
         for i, text_line in enumerate(wrapped):
             draw.text((margin + 28, 300 + i * 42), text_line, font=quote_font, fill=TEXT)
 
     # Footer
-    draw.line((margin, 520, WIDTH - margin, 520), fill=(110, 50, 30), width=2)
+    draw.line((margin, 520, WIDTH - margin, 520), fill=(60, 62, 52), width=2)
     footer_font = _font(26, 600)
     author = strip_unrenderable(data.author_first_name).strip()
     who = f"Roasted for {author}" if author else "Freshly roasted"
     draw.text((margin, 548), _fit_text(draw, who, footer_font, 600), font=footer_font, fill=MUTED)
-    cta = "Un repo-vum roast pannalaama?"
-    draw.text((WIDTH - margin, 548), cta, font=footer_font, fill=ORANGE, anchor="ra")
+    cta = "Want your repo roasted too?"
+    draw.text((WIDTH - margin, 548), cta, font=footer_font, fill=LIME, anchor="ra")
 
     buf = io.BytesIO()
     img.save(buf, format="PNG", optimize=True)

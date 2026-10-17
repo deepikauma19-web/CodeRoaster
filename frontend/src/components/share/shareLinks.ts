@@ -1,9 +1,9 @@
 import type { SharePlatformLink } from '../../types/share';
 
-/** Tanglish share blurb used by WhatsApp / X. */
+/** Share blurb used by WhatsApp / X. */
 export const buildShareText = (score: number | null): string => {
   const scorePart = score === null ? '' : ` Score: ${score}/100`;
-  return `En code-a roast panniteenga 😭🔥${scorePart}`;
+  return `My code just got roasted 😭🔥${scorePart}`;
 };
 
 export const buildPlatformLinks = (shareUrl: string, text: string): SharePlatformLink[] => {

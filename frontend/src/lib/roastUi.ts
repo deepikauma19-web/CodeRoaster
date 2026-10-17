@@ -12,19 +12,19 @@ export const INTENSITY_OPTIONS: readonly IntensityOption[] = [
     value: 'mild',
     chilis: '🌶️',
     label: 'Mild',
-    sample: 'Nalla try pa, but README konjam azhaga ezhudhalaam.',
+    sample: 'Good effort, but the README could use a little polish.',
   },
   {
     value: 'medium',
     chilis: '🌶️🌶️',
     label: 'Medium',
-    sample: 'main.py-la 400 lines-aa? Function-nu oru concept irukku da.',
+    sample: '400 lines in main.py? Functions are a thing, you know.',
   },
   {
     value: 'extra_spicy',
     chilis: '🌶️🌶️🌶️',
     label: 'Extra Spicy',
-    sample: 'API key-a commit pannitu "secure app"-nu README-la potrukkiya? Semma comedy.',
+    sample: 'Committed your API key and called it a "secure app" in the README? Comedy gold.',
   },
 ];
 

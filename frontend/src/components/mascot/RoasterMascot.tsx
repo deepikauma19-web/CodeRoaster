@@ -6,8 +6,8 @@ import { useCursorVector, type CursorVector } from '../../hooks/useCursorVector'
 
 const FOLLOW_SPRING = { type: 'spring', stiffness: 110, damping: 16, mass: 0.7 } as const;
 
-const GREETING = 'Vaanga! Un repo-va paste pannu, naan roast pannren 🔥';
-const HOVER_LINE = 'Enna paakura? Sign in pannu da, score paakalaam! 😄';
+const GREETING = 'Welcome! Paste your repo and I will roast it 🔥';
+const HOVER_LINE = 'Still staring at me? Sign in and see your score! 😄';
 
 /** Eye geometry in the cropped photo's coordinate space. */
 const PHOTO_W = 1400;

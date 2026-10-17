@@ -37,7 +37,7 @@ function IntensityCard({ option, ...radioProps }: IntensityCardProps) {
         borderWidth="2px"
         borderColor={state.isChecked ? 'accent.fire' : 'border.subtle'}
         bg={state.isChecked ? 'bg.subtle' : 'bg.card'}
-        boxShadow={state.isChecked ? '0 0 0 3px rgba(249, 98, 15, 0.25)' : 'none'}
+        boxShadow={state.isChecked ? '0 0 0 3px rgba(212, 242, 60, 0.6)' : 'none'}
         opacity={state.isDisabled ? 0.6 : 1}
         transition="all 0.2s"
         _hover={state.isDisabled ? undefined : { borderColor: 'brand.300' }}

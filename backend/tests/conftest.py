@@ -221,7 +221,7 @@ def completed_roast_fields() -> dict[str, Any]:
             "ai_best_practices": 13,
             "security": 13,
         },
-        "roast_text": "## Intro\nEnna da idhu, README-ae illa!\n\n- Second line",
+        "roast_text": "## Intro\nThere is no README here!\n\n- Second line",
         "summary": "Decent start, needs docs.",
         "tips": sample_tips(),
         "files_analyzed": 4,
@@ -247,7 +247,7 @@ def sample_tips(n: int = 3) -> list[dict[str, Any]]:
 def llm_payload(**overrides: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "summary": "Solid-ish beginner repo with gaps.",
-        "roast": "Machi, `main.py`-la try-except pass potta bug-um pass aayidum!",
+        "roast": "Bro, a bare `pass` in a try-except in `main.py` won't fix the bug, it will hide it!",
         "scores": {
             "code_quality": 12,
             "structure": 10,

@@ -43,7 +43,7 @@ describe('App routing', () => {
 
   it('renders the 404 page for unknown routes', () => {
     renderAt('/does-not-exist');
-    expect(screen.getByText('Indha page-ae illa da')).toBeInTheDocument();
+    expect(screen.getByText(/This page does not exist/)).toBeInTheDocument();
   });
 
   it('redirects / to /login when logged out', async () => {

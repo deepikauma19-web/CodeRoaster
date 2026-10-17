@@ -1,6 +1,6 @@
 # INITIAL.md - Code Roaster Product Definition
 
-> Paste a public GitHub repo, get your code analysed and roasted in Tanglish (Tamil + English), with a score and tips to improve.
+> Paste a public GitHub repo, get your code analysed and roasted in funny, human-sounding English, with a score and tips to improve.
 
 ---
 
@@ -12,7 +12,7 @@ Code Roaster
 ### Description
 Code Roaster is a fun but useful code review tool for people learning AI development. A user signs in with their Gmail account and pastes the URL of a public GitHub repository, usually a course assignment or side project. The app fetches the repo, analyses the code with OpenAI GPT, and returns:
 
-- A **Tanglish roast**: a funny, Chennai-style roast in Tamil (Latin script) mixed with English. It roasts the code, never the person.
+- A **funny English roast**: a witty, human-sounding roast in plain English. It roasts the code, never the person.
 - A **score out of 100**, broken down by category: code quality, project structure, documentation, AI/LLM best practices, and security.
 - **Actionable tips** that tell the learner exactly what to fix next.
 
@@ -80,7 +80,7 @@ People learning AI development (students, bootcamp learners, self-taught develop
 
 ### Module 2: Roast (Core)
 
-**Description:** Submit a public GitHub repo, then fetch and analyse its code with GPT. Returns a Tanglish roast, a score, and improvement tips.
+**Description:** Submit a public GitHub repo, then fetch and analyse its code with GPT. Returns an English roast, a score, and improvement tips.
 
 **Models:**
 - Roast:
@@ -90,7 +90,7 @@ People learning AI development (students, bootcamp learners, self-taught develop
   - status: `pending` | `fetching` | `analyzing` | `completed` | `failed`
   - overall_score (0–100)
   - score_breakdown (JSON): code_quality, structure, documentation, ai_best_practices, security (each 0–20)
-  - roast_text (Tanglish roast, markdown)
+  - roast_text (English roast, markdown)
   - summary (short English summary of what the repo does)
   - tips (JSON list of `{title, description, priority: high|medium|low, file_path?}`)
   - files_analyzed (int), language_breakdown (JSON)
@@ -125,7 +125,7 @@ People learning AI development (students, bootcamp learners, self-taught develop
 **Levels:**
 - 🌶️ **Mild**: Friendly senior mentor. Gentle teasing, mostly encouragement.
 - 🌶️🌶️ **Medium**: Classic college-friend roast. Funny and direct.
-- 🌶️🌶️🌶️ **Extra Spicy**: Full "Madras local" roast. Savage, but still roasting the code, never the person.
+- 🌶️🌶️🌶️ **Extra Spicy**: Full stand-up comic roast. Savage, but still roasting the code, never the person.
 
 **Implementation:**
 - `intensity` enum on Roast (see Module 2)
@@ -192,7 +192,7 @@ People learning AI development (students, bootcamp learners, self-taught develop
 ### Must Have (MVP)
 - [x] Sign in with Google (Gmail)
 - [x] Submit a public GitHub repo URL and get it analysed
-- [x] Tanglish roast + overall score (0–100) + category breakdown + improvement tips
+- [x] English roast + overall score (0–100) + category breakdown + improvement tips
 - [x] Roast intensity selector (Mild / Medium / Extra Spicy)
 - [x] Shareable public roast link + OG image card
 - [x] Admin panel (users, roasts moderation, stats)
@@ -219,9 +219,9 @@ People learning AI development (students, bootcamp learners, self-taught develop
 
 ### Roast
 - [ ] Only `https://github.com/{owner}/{repo}` URLs are accepted. Invalid URLs return 400 with a helpful message.
-- [ ] Private or non-existent repos fail with a clear error ("Repo-ve kaanom da!" + English explanation)
+- [ ] Private or non-existent repos fail with a clear error (with a clear English explanation)
 - [ ] Large repos are truncated to the file and character caps without crashing
-- [ ] Roast completes and shows: overall score, 5-category breakdown, Tanglish roast, 3–7 tips
+- [ ] Roast completes and shows: overall score, 5-category breakdown, English roast, 3–7 tips
 - [ ] Frontend polls status and shows fun loading messages until the roast completes or fails
 - [ ] Failed roasts show the error and a Retry button
 - [ ] Users can only view, retry, or delete their own roasts
@@ -265,7 +265,7 @@ People learning AI development (students, bootcamp learners, self-taught develop
 ### Content Safety
 - [x] Roast the code, never the person
 - [x] No slurs or content about caste, religion, gender, body, or region
-- [x] Tamil written in Latin script (Tanglish), readable for non-Tamil script readers
+- [x] Roast written in clear, natural English
 
 ### Integrations
 - [ ] Email service for notifications (post-MVP)

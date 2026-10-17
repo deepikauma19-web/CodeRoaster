@@ -30,7 +30,7 @@ export const makeRoast = (overrides: Partial<Roast> = {}): Roast => ({
     ai_best_practices: 18,
     security: 15,
   },
-  roast_text: 'Bro, **main.py**-la 400 lines-aa?',
+  roast_text: 'Bro, 400 lines in **main.py**?',
   summary: 'Decent repo, docs weak.',
   tips: [
     { title: 'Split main.py', description: 'Too long.', priority: 'high', file_path: 'main.py' },
@@ -59,7 +59,7 @@ export const makePublicRoast = (overrides: Partial<PublicRoastResponse> = {}): P
     ai_best_practices: 10,
     security: 8,
   },
-  roast_text: 'Semma comedy da.',
+  roast_text: 'Comedy gold.',
   tips: [{ title: 'Remove API key', description: 'Use .env', priority: 'high', file_path: 'config.py' }],
   author_first_name: 'Deepa',
   author_avatar_url: null,

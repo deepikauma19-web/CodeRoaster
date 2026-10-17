@@ -41,7 +41,7 @@ export function FailureRate({ rate, totalRoasts, isLoading = false }: FailureRat
               : 'No data yet'}
           </Text>
           <Text fontSize="sm" mt={1}>
-            {pct >= 25 ? 'Pipeline-la fire pudichirukku 🔥' : pct >= 10 ? 'Konjam watch pannu' : 'All good da 👍'}
+            {pct >= 25 ? 'The pipeline is on fire. Not in the good way 🔥' : pct >= 10 ? 'Keep an eye on it' : 'All good 👍'}
           </Text>
         </Skeleton>
       </Flex>

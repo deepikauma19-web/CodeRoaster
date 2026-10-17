@@ -89,8 +89,8 @@ describe('ScoreGauge', () => {
   it.each([
     [10, 'Burnt 🔥'],
     [45, 'Half-boiled'],
-    [72, 'Decent da'],
-    [95, 'Semma! 🏆'],
+    [72, 'Decent'],
+    [95, 'Excellent! 🏆'],
   ])('score %i has aria-label with score and band %s', (score, label) => {
     renderWithChakra(<ScoreGauge score={score} animated={false} />);
     expect(screen.getByRole('img')).toHaveAttribute('aria-label', `Score ${score} out of 100: ${label}`);
@@ -99,7 +99,7 @@ describe('ScoreGauge', () => {
 
   it('clamps out-of-range scores', () => {
     renderWithChakra(<ScoreGauge score={140} animated={false} />);
-    expect(screen.getByRole('img')).toHaveAttribute('aria-label', 'Score 100 out of 100: Semma! 🏆');
+    expect(screen.getByRole('img')).toHaveAttribute('aria-label', 'Score 100 out of 100: Excellent! 🏆');
   });
 
   it('labels with the target score even while animating', () => {
@@ -214,7 +214,7 @@ describe('RoastLoader', () => {
     renderWithChakra(<RoastLoader status="fetching" />);
     expect(screen.getByTestId('roast-loader')).toHaveAttribute('role', 'status');
     expect(screen.getByText('Fetching repo').closest('[aria-current="step"]')).not.toBeNull();
-    expect(screen.getByText('Repo-va clone pannuren…')).toBeInTheDocument();
+    expect(screen.getByText('Cloning the repo… no judgement yet.')).toBeInTheDocument();
   });
 });
 

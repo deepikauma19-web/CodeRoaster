@@ -44,7 +44,7 @@ describe('AdminDashboardPage', () => {
     expect(screen.getByText('56')).toBeInTheDocument();
     expect(screen.getByText('789')).toBeInTheDocument();
     expect(screen.getByText('72.4')).toBeInTheDocument();
-    expect(screen.getByText('Decent da')).toBeInTheDocument();
+    expect(screen.getByText('Decent')).toBeInTheDocument();
     expect(screen.getAllByText('5.0%').length).toBeGreaterThan(0);
     expect(screen.getByText('1.5M')).toBeInTheDocument();
     expect(screen.getByLabelText('Medium roasts')).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe('AdminUsersPage', () => {
     unmount();
     mockListUsers.mockResolvedValueOnce(page([]));
     renderWithProviders(<AdminUsersPage />, { route: '/admin/users', auth: admin });
-    expect(await screen.findByText(/No users found da/)).toBeInTheDocument();
+    expect(await screen.findByText(/No users found/)).toBeInTheDocument();
   });
 
   it('self-demotion 409 shows the backend detail', async () => {
@@ -117,7 +117,7 @@ describe('AdminUsersPage', () => {
     await user.click(within(dialog).getByRole('button', { name: 'Remove admin' }));
     expect(mockUpdateUser).toHaveBeenCalledWith(1, { is_admin: false });
     expect(await screen.findByText('You cannot remove your own admin access')).toBeInTheDocument();
-    expect(screen.getByText('Not allowed da')).toBeInTheDocument();
+    expect(screen.getByText('Not allowed')).toBeInTheDocument();
     // Switch stays on.
     expect(screen.getByRole('checkbox', { name: 'Remove admin from me@admin.com' })).toBeChecked();
   });
@@ -208,7 +208,7 @@ describe('AdminRoastsPage', () => {
     await user.click(await screen.findByRole('button', { name: 'View roast of octo/todo-app' }));
     const drawer = await screen.findByRole('dialog');
     expect(within(drawer).getByText('Mid code')).toBeInTheDocument();
-    expect(within(drawer).getByText('Decent da')).toBeInTheDocument();
+    expect(within(drawer).getByText('Decent')).toBeInTheDocument();
   });
 
   it('opens the public share page in a new tab for public roasts', async () => {
@@ -241,7 +241,7 @@ describe('AdminRoastsPage', () => {
     await user.type(to, '2026-01-01');
     const calls = mockListRoasts.mock.calls.length;
     await user.type(from, '2026-02-01');
-    expect(await screen.findByText(/"From" date "To" date-ku munnaadi irukkanum/)).toBeInTheDocument();
+    expect(await screen.findByText(/The "From" date must be before the "To" date/)).toBeInTheDocument();
     expect(mockListRoasts.mock.calls.length).toBe(calls);
   });
 });

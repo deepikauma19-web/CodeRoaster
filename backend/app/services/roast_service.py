@@ -33,9 +33,9 @@ MAX_COMPLETION_TOKENS = 3000
 # Reasoning-model families reject a custom temperature.
 _NO_TEMPERATURE_PREFIXES = ("o1", "o3", "o4", "gpt-5")
 
-MSG_LLM_FAILED = "AI roaster-ku confusion aayiduchu. Konjam neram kazhichu retry pannu."
-MSG_LLM_REFUSED = "AI roaster indha repo-va roast panna maatten-nu solluthu. Vera repo try pannu."
-MSG_LLM_UNAVAILABLE = "AI roaster busy-aa irukku, konjam neram kazhichu retry pannu."
+MSG_LLM_FAILED = "The AI roaster got confused. Please try again in a little while."
+MSG_LLM_REFUSED = "The AI roaster refused to roast this repo. Please try a different repo."
+MSG_LLM_UNAVAILABLE = "The AI roaster is busy right now. Please try again in a little while."
 
 REPAIR_INSTRUCTION = (
     "Your previous reply was not valid for the required JSON schema ({error}). "

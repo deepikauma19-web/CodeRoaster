@@ -58,7 +58,7 @@ export function RecentRoasts({ size = 5 }: RecentRoastsProps) {
       )}
 
       {!isLoading && !error && roasts.length === 0 && (
-        <Text color="text.muted">Innum oru roast-um illa. Mela oru repo potu start pannu! 🔥</Text>
+        <Text color="text.muted">No roasts yet. Your code is safe... for now. Add a repo above! 🔥</Text>
       )}
 
       {!isLoading && !error && roasts.length > 0 && (

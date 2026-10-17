@@ -76,14 +76,14 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
       });
       toast({
         status: 'success',
-        title: result.is_public ? 'Public aayiduchu 🔥 Share pannu!' : 'Private-aa maathiyaachu 🔒',
+        title: result.is_public ? 'Your roast is public now 🔥 Share it!' : 'Your roast is private again 🔒',
         duration: 2500,
         isClosable: true,
       });
     } catch (err: unknown) {
       toast({
         status: 'error',
-        title: 'Share setting maatha mudiyala',
+        title: 'Could not change the share setting',
         description: getErrorMessage(err),
         duration: 4000,
         isClosable: true,
@@ -101,7 +101,7 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
     } else {
       fallbackCopy();
     }
-    toast({ status: 'success', title: 'Link copy aayiduchu 📋', duration: 1500 });
+    toast({ status: 'success', title: 'Link copied 📋', duration: 1500 });
   };
 
   const platformLinks = shareUrl ? buildPlatformLinks(shareUrl, buildShareText(roast.overall_score)) : [];
@@ -111,7 +111,7 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
       <FormControl display="flex" alignItems="center" isDisabled={!isCompleted || isToggling}>
         <Switch
           id={`share-toggle-${roast.id}`}
-          colorScheme="brand"
+          colorScheme="ink"
           isChecked={roast.is_public}
           onChange={(e) => {
             void handleToggle(e);
@@ -178,8 +178,8 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
           <Icon as={FiLock} />
           <Text fontSize="sm">
             {isCompleted
-              ? 'Public pannina dhaan share panna mudiyum'
-              : 'Roast complete aana apram dhaan share panna mudiyum'}
+              ? 'Make it public to share'
+              : 'You can share once the roast is complete'}
           </Text>
         </HStack>
       )}

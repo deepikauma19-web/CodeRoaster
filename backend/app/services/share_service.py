@@ -120,11 +120,11 @@ def first_name(full_name: str | None) -> str:
 
 
 def score_band(score: int) -> str:
-    """Tanglish band label for a 0-100 score."""
+    """Band label for a 0-100 score."""
     if score >= 80:
-        return "Semma!"
+        return "Excellent!"
     if score >= 60:
-        return "Decent da"
+        return "Decent"
     if score >= 40:
         return "Half-boiled"
     return "Burnt"

@@ -62,7 +62,7 @@ describe('RoastResultPage', () => {
     mockGetRoast.mockResolvedValue(makeRoast({ overall_score: 72 }));
     renderPage();
     expect(await screen.findByTestId('roast-completed')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: 'Score 72 out of 100: Decent da' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Score 72 out of 100: Decent' })).toBeInTheDocument();
     expect(screen.getByTestId('score-breakdown')).toBeInTheDocument();
     expect(screen.getByTestId('tips-list')).toBeInTheDocument();
     expect(screen.getByTestId('roast-card')).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('RoastResultPage', () => {
     mockRetry.mockRejectedValue(axiosError(409, { detail: 'Only failed roasts can be retried' }));
     renderPage();
     const failed = await screen.findByTestId('roast-failed');
-    expect(failed).toHaveTextContent('Edho thappu nadandhuduchu');
+    expect(failed).toHaveTextContent('Something went wrong');
     await user.click(within(failed).getByRole('button', { name: /Retry/ }));
     expect(await screen.findByText('Only failed roasts can be retried')).toBeInTheDocument();
   });
@@ -145,7 +145,7 @@ describe('RoastResultPage', () => {
     await user.click(screen.getByRole('button', { name: 'Delete' }));
     const dialog = await screen.findByRole('alertdialog');
     await user.click(within(dialog).getByRole('button', { name: 'Delete' }));
-    expect(await screen.findByText('Delete panna mudiyala')).toBeInTheDocument();
+    expect(await screen.findByText('Could not delete the roast')).toBeInTheDocument();
     expect(screen.getByTestId('location')).toHaveTextContent('/roasts/42');
   });
 

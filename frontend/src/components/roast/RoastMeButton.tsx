@@ -1,7 +1,6 @@
 import { Box, Button, type ButtonProps } from '@chakra-ui/react';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { MotionSafe } from '../../lib/motion';
-import { fireGradient } from '../../theme';
 
 const MotionButton = motion.create(Button);
 const MotionFlame = motion.create(Box);
@@ -25,10 +24,10 @@ export function RoastMeButton({ isLoading = false, isDisabled, label = 'Roast Me
       h={14}
       fontSize="lg"
       color="white"
-      bgGradient={fireGradient}
-      boxShadow="0 10px 30px -10px rgba(249, 98, 15, 0.7)"
-      _hover={{ bgGradient: 'linear(to-r, brand.300, red.400)' }}
-      _active={{ bgGradient: 'linear(to-r, brand.500, red.600)' }}
+      bg="ink.500"
+      boxShadow="0 10px 30px -12px rgba(10, 10, 10, 0.6)"
+      _hover={{ bg: 'brand.400', color: 'ink.500' }}
+      _active={{ bg: 'brand.500', color: 'ink.500' }}
       isLoading={isLoading}
       loadingText="Roasting…"
       isDisabled={isDisabled}

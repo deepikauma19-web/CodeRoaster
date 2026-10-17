@@ -57,8 +57,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               as={RouterLink}
               to="/"
               size="md"
-              bgGradient="linear(to-r, brand.500, red.500)"
-              bgClip="text"
+              fontFamily="display"
               _hover={{ textDecoration: 'none' }}
             >
               Code Roaster 🔥

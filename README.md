@@ -1,11 +1,11 @@
 <div align="center">
 
-<img src="docs/banner.png" alt="Code Roaster: paste a GitHub repo, get roasted in Tanglish" width="100%" />
+<img src="docs/banner.png" alt="Code Roaster: paste a GitHub repo, get roasted in English" width="100%" />
 
 # 🔥 Code Roaster
 
-**Un code-a naanga roast pannuvom, nee improve pannu!**
-Paste a public GitHub repo. Get an honest (and spicy) **Tanglish** roast, a **score out of 100** and **tips to improve**.
+**We roast your code, you improve it!**
+Paste a public GitHub repo. Get an honest (and spicy) **funny English** roast, a **score out of 100** and **tips to improve**.
 
 <a href="https://roaster.getvibed.tech"><img src="https://img.shields.io/badge/%F0%9F%94%A5%20Try%20it%20live-roaster.getvibed.tech-f9620f?style=for-the-badge" alt="Try it live" /></a>
 
@@ -39,7 +39,7 @@ Paste a public GitHub repo. Get an honest (and spicy) **Tanglish** roast, a **sc
     </td>
     <td width="33%" valign="top">
       <h3>✅ Actionable tips</h3>
-      3–7 prioritized tips in clear English, with a little Tanglish flavor.
+      3–7 prioritized tips in clear English, with a little humour.
     </td>
   </tr>
   <tr>
@@ -296,6 +296,6 @@ flowchart LR
 
 <div align="center">
 
-Made with 🔥 and a lot of Tanglish.
+Made with 🔥 and a lot of humour.
 
 </div>

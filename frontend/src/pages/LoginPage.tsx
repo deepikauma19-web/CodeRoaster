@@ -36,13 +36,13 @@ const STEPS: HowItWorksStep[] = [
     icon: FiGithub,
     title: "Paste your repo",
     description:
-      "Public GitHub link podu — assignment, side project, edhuvaa irundhaalum.",
+      "Any public GitHub link works — assignment, side project, anything.",
   },
   {
     icon: FiZap,
     title: "Pick your spice level",
     description:
-      "Mild 🌶️, Medium 🌶️🌶️ or Extra Spicy 🌶️🌶️🌶️ — un heart strength-ku yetha maadhiri.",
+      "Mild 🌶️, Medium 🌶️🌶️ or Extra Spicy 🌶️🌶️🌶️ — pick the heat level you can handle.",
   },
   {
     icon: FiAward,
@@ -69,9 +69,9 @@ const EXAMPLES: RoastExample[] = [
     badgeScheme: "red",
     roast: (
       <>
-        “Bro, <Code>main.py</Code>-la 800 lines-a? Idhu file illa, novel. And
-        that API key in <Code>config.py</Code>… GitHub-la public-a podra
-        alavukku generous-a irukka? 😭”
+        “Bro, 800 lines in <Code>main.py</Code>? That's not a file, that's a
+        novel. And that API key in <Code>config.py</Code>… generous of you to
+        make it public on GitHub, no? 😭”
       </>
     ),
     score: 42,
@@ -84,9 +84,10 @@ const EXAMPLES: RoastExample[] = [
     badgeScheme: "orange",
     roast: (
       <>
-        “Chatbot logic nalla irukku, aana <Code>README.md</Code>-la ‘TODO’
-        mattum dhaan? Interview-la epdi explain pannuva? Tests-um illa — bug
-        vandha bot-ae sirikkum 😅”
+        “The chatbot logic is solid, but the only thing in your{" "}
+        <Code>README.md</Code> is ‘TODO’? How will you explain this in an
+        interview? And no tests either — when a bug shows up, even the bot
+        will laugh 😅”
       </>
     ),
     score: 71,
@@ -114,14 +115,14 @@ export default function LoginPage() {
           <Badge
             alignSelf="flex-start"
             colorScheme="brand"
-            variant="subtle"
+            variant="solid"
             px={3}
             py={1}
             borderRadius="full"
           >
             AI code review, but make it spicy
           </Badge>
-          <Heading as="h1" size="2xl" lineHeight="1.1">
+          <Heading as="h1" size="2xl" lineHeight="1.1" fontFamily="display">
             Code Roaster{" "}
             <Box as="span" role="img" aria-label="fire">
               🔥
@@ -132,7 +133,7 @@ export default function LoginPage() {
             fontWeight="semibold"
             color="accent.fire"
           >
-            Un code-a naanga roast pannuvom, nee improve pannu!
+            We roast your code, you improve it!
           </Text>
           <Text color="text.muted" fontSize={{ base: "lg", lg: "xl" }}>
             Drop your GitHub repo and get a brutally honest (but helpful) review
@@ -142,7 +143,7 @@ export default function LoginPage() {
           <Stack spacing={2} align={{ base: "stretch", sm: "flex-start" }}>
             <GoogleSignInButton />
             <Text fontSize="sm" color="text.muted">
-              Google login mattum dhaan — no passwords to forget.
+              Google login only — no passwords to forget.
             </Text>
           </Stack>
         </Stack>
@@ -217,8 +218,8 @@ export default function LoginPage() {
               <HStack spacing={3} mb={3}>
                 <Circle
                   size="40px"
-                  bg="brand.500"
-                  color="white"
+                  bg="brand.400"
+                  color="ink.500"
                   aria-hidden="true"
                 >
                   <Box as={step.icon} />

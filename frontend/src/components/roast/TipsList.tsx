@@ -25,7 +25,7 @@ export function TipsList({ tips, interactive = false }: TipsListProps) {
   if (tips.length === 0) {
     return (
       <Text color="text.muted" data-testid="tips-empty">
-        Tips onnum illa. Semma repo pola! 🏆
+        No tips needed. Are you sure you wrote this yourself? 🏆
       </Text>
     );
   }
