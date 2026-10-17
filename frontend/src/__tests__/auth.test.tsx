@@ -158,7 +158,7 @@ describe('AuthCallbackPage', () => {
     window.history.replaceState(null, '', '/auth/callback#error=account_deactivated');
     const completeLogin = vi.fn();
     renderCallback(makeAuthValue({ completeLogin }));
-    expect(screen.getByRole('heading', { name: /Account deactivate aagiduchu/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Account deactivated/ })).toBeInTheDocument();
     expect(screen.getByText('Error code: account_deactivated')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Try again' })).not.toBeInTheDocument();
     expect(completeLogin).not.toHaveBeenCalled();

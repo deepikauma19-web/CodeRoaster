@@ -139,7 +139,7 @@ export default function AdminUsersPage() {
         title={copy?.title ?? ''}
         body={
           <Text>
-            {copy?.action} <strong>{pendingName}</strong>? Idhu udane apply aagum.
+            {copy?.action} <strong>{pendingName}</strong>? This takes effect immediately.
           </Text>
         }
         confirmLabel={copy?.action}

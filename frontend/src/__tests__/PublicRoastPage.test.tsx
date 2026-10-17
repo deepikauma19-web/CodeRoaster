@@ -1,16 +1,18 @@
 import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import PublicRoastPage from '../pages/PublicRoastPage';
-import { getPublicRoast } from '../services/shareApi';
+import { getPublicRoast, reportPublicRoast } from '../services/shareApi';
 import { axiosError, makePublicRoast } from './utils/fixtures';
 import { renderWithProviders } from './utils/renderWithProviders';
 
 vi.mock('../services/shareApi', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../services/shareApi')>();
-  return { ...actual, getPublicRoast: vi.fn() };
+  return { ...actual, getPublicRoast: vi.fn(), reportPublicRoast: vi.fn() };
 });
 
 const mockGetPublic = vi.mocked(getPublicRoast);
+const mockReport = vi.mocked(reportPublicRoast);
 
 const renderPage = (slug = 'abc123') =>
   renderWithProviders(<PublicRoastPage />, { route: `/r/${slug}`, path: '/r/:shareSlug' });
@@ -18,6 +20,7 @@ const renderPage = (slug = 'abc123') =>
 describe('PublicRoastPage', () => {
   beforeEach(() => {
     mockGetPublic.mockReset();
+    mockReport.mockReset();
     document.title = 'Code Roaster';
   });
 
@@ -42,6 +45,28 @@ describe('PublicRoastPage', () => {
     expect(screen.getByLabelText('Intensity: Extra Spicy')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Want your repo roasted too/ })).toHaveAttribute('href', '/login');
     await waitFor(() => expect(document.title).toBe('octo/todo-app – 35/100 | Code Roaster'));
+  });
+
+  it('is unlisted: adds a noindex robots tag and shows the AI notice', async () => {
+    mockGetPublic.mockResolvedValue(makePublicRoast());
+    renderPage();
+    expect(await screen.findByTestId('public-roast-notice')).toHaveTextContent(/judges the code, not the person/);
+    expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+  });
+
+  it('reports a roast through the report dialog', async () => {
+    const user = userEvent.setup();
+    mockGetPublic.mockResolvedValue(makePublicRoast());
+    mockReport.mockResolvedValue(undefined);
+    renderPage('abc123');
+    await user.click(await screen.findByTestId('report-roast-button'));
+    await user.selectOptions(screen.getByLabelText('What is wrong?'), 'harassment');
+    await user.type(screen.getByLabelText('Details (optional)'), 'Unfair');
+    await user.click(screen.getByRole('button', { name: 'Send report' }));
+    await waitFor(() =>
+      expect(mockReport).toHaveBeenCalledWith('abc123', { reason: 'harassment', details: 'Unfair' }),
+    );
+    expect(await screen.findByText('Thanks, we received your report')).toBeInTheDocument();
   });
 
   it('handles a roast without score or text', async () => {

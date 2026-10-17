@@ -24,6 +24,7 @@ import { ScoreBreakdownBars } from '../components/roast/ScoreBreakdownBars';
 import { ScoreGauge } from '../components/roast/ScoreGauge';
 import { TipsList } from '../components/roast/TipsList';
 import { AuthorChip } from '../components/share/AuthorChip';
+import { ReportRoastButton } from '../components/share/ReportRoastButton';
 import { getErrorMessage } from '../services/api';
 import { getPublicRoast } from '../services/shareApi';
 import type { PublicRoastResponse } from '../types/roast';
@@ -124,6 +125,17 @@ export default function PublicRoastPage(): JSX.Element {
     };
   }, [pageTitle]);
 
+  // Shared roasts are unlisted: reachable by link, never offered to search engines.
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => {
+      meta.remove();
+    };
+  }, []);
+
   if (state.kind === 'loading') {
     return (
       <PageWrapper>
@@ -209,6 +221,19 @@ export default function PublicRoastPage(): JSX.Element {
           </Heading>
           <TipsList tips={roast.tips} interactive={false} />
         </GlassCard>
+
+        <Flex
+          justify="space-between"
+          align={{ base: 'flex-start', md: 'center' }}
+          direction={{ base: 'column', md: 'row' }}
+          gap={2}
+          data-testid="public-roast-notice"
+        >
+          <Text fontSize="sm" color="text.muted">
+            AI-generated roast of a public GitHub repo, made for fun. It judges the code, not the person.
+          </Text>
+          {shareSlug && <ReportRoastButton shareSlug={shareSlug} />}
+        </Flex>
 
         <RoastCta />
       </Stack>

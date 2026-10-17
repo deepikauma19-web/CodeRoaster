@@ -35,7 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   const handleLogout = async (): Promise<void> => {
     await logout();
-    toast({ title: 'Logged out. Seekiram vaa! 👋', status: 'success', duration: 3000 });
+    toast({ title: 'Logged out. Come back soon! 👋', status: 'success', duration: 3000 });
     navigate('/login', { replace: true });
   };
 

@@ -6,7 +6,7 @@ PublicRoastResponse deliberately carries NO email, NO user_id and NO roast id.
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.models import RoastIntensity
 
@@ -60,3 +60,19 @@ class ShareToggleResponse(BaseModel):
     is_public: bool
     share_slug: str | None
     share_url: str | None
+
+
+ReportReason = Literal["owner_request", "harassment", "secrets", "other"]
+
+
+class RoastReportCreate(BaseModel):
+    """Body for POST /public/roasts/{slug}/report."""
+
+    reason: ReportReason
+    details: str | None = Field(default=None, max_length=500)
+
+
+class RoastReportResponse(BaseModel):
+    """Acknowledgement of a report (identical whether or not it was a duplicate)."""
+
+    received: bool = True

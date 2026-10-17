@@ -34,6 +34,19 @@ export interface AdminRoast extends Roast {
   user_email: string;
 }
 
+export interface AdminReport {
+  id: number;
+  roast_id: number;
+  repo_owner: string;
+  repo_name: string;
+  reason: string;
+  details: string | null;
+  is_public: boolean;
+  share_blocked: boolean;
+  report_count: number;
+  created_at: string;
+}
+
 export interface AdminUsersQuery {
   search?: string;
   page?: number;

@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import type { IconType } from 'react-icons';
 import { FaLinkedin, FaWhatsapp, FaXTwitter } from 'react-icons/fa6';
-import { FiCheck, FiCopy, FiLock } from 'react-icons/fi';
+import { FiAlertTriangle, FiCheck, FiCopy, FiLock } from 'react-icons/fi';
 import { getErrorMessage } from '../../services/api';
 import { buildShareUrl, toggleRoastShare } from '../../services/shareApi';
 import type { Roast } from '../../types/roast';
@@ -61,6 +61,12 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
   }, [apiCopied]);
 
   const isCompleted = roast.status === 'completed';
+  const blockReason = roast.share_blocked
+    ? 'Sharing is off for this roast because it was reported.'
+    : roast.secrets_detected > 0
+      ? 'Sharing is off because secrets were found in this repo. Remove them and roast again.'
+      : null;
+  const shareDisabled = blockReason !== null && !roast.is_public;
   const hasCopied = apiCopied || fallbackCopied;
 
   const handleToggle = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -108,7 +114,7 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
 
   return (
     <Stack spacing={4} w="full">
-      <FormControl display="flex" alignItems="center" isDisabled={!isCompleted || isToggling}>
+      <FormControl display="flex" alignItems="center" isDisabled={!isCompleted || isToggling || shareDisabled}>
         <Switch
           id={`share-toggle-${roast.id}`}
           colorScheme="ink"
@@ -173,6 +179,11 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
             })}
           </Wrap>
         </Stack>
+      ) : shareDisabled ? (
+        <HStack spacing={2} color="text.muted" align="flex-start" data-testid="share-blocked">
+          <Icon as={FiAlertTriangle} mt={1} />
+          <Text fontSize="sm">{blockReason}</Text>
+        </HStack>
       ) : (
         <HStack spacing={2} color="text.muted">
           <Icon as={FiLock} />

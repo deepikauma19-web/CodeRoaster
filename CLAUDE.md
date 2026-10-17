@@ -203,6 +203,10 @@ const fetchRoast = async (id: number): Promise<Roast> => {
 - Roasts are private by default (`is_public = false`).
 - `share_slug` is random and URL-safe (`secrets.token_urlsafe`), never derived from the id.
 - Public endpoints return only: repo name, score, breakdown, roast text, tips, the user's first name, and avatar. Never return email or user_id.
+- Roasts with detected secrets (`secrets_detected > 0`) can never be made public.
+- Shared pages and public endpoints are unlisted: always send `X-Robots-Tag: noindex, nofollow` (and the robots meta on HTML pages).
+- Public roasts can be reported (`POST /api/v1/public/roasts/{slug}/report`). Store only a salted IP hash. At `REPORT_AUTO_UNPUBLISH_THRESHOLD` distinct reports the roast is unpublished and `share_blocked` is set. Only an admin can lift the block.
+- Admin sharing blocks and unblocks must be logged.
 
 ### Admin Module
 - All `/api/v1/admin/*` routes require the `require_admin` dependency.

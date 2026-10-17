@@ -48,7 +48,7 @@ export default function AdminDashboardPage() {
         <Alert status="error" borderRadius="xl" mb={6} flexWrap="wrap" gap={2}>
           <AlertIcon />
           <Box flex="1" minW="12rem">
-            <AlertTitle>Stats load aagala</AlertTitle>
+            <AlertTitle>Could not load stats</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Box>
           <Button size="sm" colorScheme="red" onClick={retry}>

@@ -111,4 +111,20 @@ describe('ShareButtons', () => {
     expect(toggle()).toBeDisabled();
     expect(screen.getByText(/You can share once the roast is complete/)).toBeInTheDocument();
   });
+
+  it('is disabled with an explanation when secrets were detected', () => {
+    renderWithChakra(
+      <Harness initial={makeRoast({ is_public: false, secrets_detected: 2 })} onRoastChange={vi.fn()} />,
+    );
+    expect(toggle()).toBeDisabled();
+    expect(screen.getByTestId('share-blocked')).toHaveTextContent(/secrets were found/);
+  });
+
+  it('is disabled with an explanation when sharing was blocked after reports', () => {
+    renderWithChakra(
+      <Harness initial={makeRoast({ is_public: false, share_blocked: true })} onRoastChange={vi.fn()} />,
+    );
+    expect(toggle()).toBeDisabled();
+    expect(screen.getByTestId('share-blocked')).toHaveTextContent(/was reported/);
+  });
 });

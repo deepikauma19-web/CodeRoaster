@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Icon, Stack, Text } from '@chakra-ui/react';
 import type { IconType } from 'react-icons';
-import { FiBarChart2, FiList, FiUsers } from 'react-icons/fi';
+import { FiBarChart2, FiFlag, FiList, FiUsers } from 'react-icons/fi';
 import { NavLink, Outlet } from 'react-router-dom';
 
 interface AdminNavItem {
@@ -14,6 +14,7 @@ const NAV_ITEMS: AdminNavItem[] = [
   { label: 'Dashboard', to: '/admin', icon: FiBarChart2, end: true },
   { label: 'Users', to: '/admin/users', icon: FiUsers },
   { label: 'Roasts', to: '/admin/roasts', icon: FiList },
+  { label: 'Reports', to: '/admin/reports', icon: FiFlag },
 ];
 
 export function AdminLayout() {

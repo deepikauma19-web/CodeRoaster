@@ -47,6 +47,8 @@ export interface Roast {
   error_message: string | null;
   is_public: boolean;
   share_slug: string | null;
+  secrets_detected: number;
+  share_blocked: boolean;
   created_at: string;
   completed_at: string | null;
 }

@@ -106,6 +106,12 @@ class Roast(TimestampMixin, Base):
     share_slug: Mapped[str | None] = mapped_column(
         String(32), unique=True, index=True, nullable=True
     )
+    secrets_detected: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default=text("0")
+    )
+    share_blocked: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default=false()
+    )
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     user: Mapped[User] = relationship(back_populates="roasts")

@@ -1,5 +1,6 @@
 import api from './api';
 import type {
+  AdminReport,
   AdminRoast,
   AdminRoastsQuery,
   AdminStats,
@@ -49,4 +50,18 @@ export const listAdminRoasts = async (
 
 export const deleteAdminRoast = async (id: number): Promise<void> => {
   await api.delete(`/admin/roasts/${id}`);
+};
+
+export const listAdminReports = async (
+  query: { page?: number; size?: number },
+  signal?: AbortSignal,
+): Promise<Paginated<AdminReport>> => {
+  const { data } = await api.get<Paginated<AdminReport>>('/admin/reports', { params: query, signal });
+  return data;
+};
+
+/** Block (and unpublish) or unblock public sharing of a roast. */
+export const setAdminRoastSharingBlocked = async (id: number, blocked: boolean): Promise<AdminRoast> => {
+  const { data } = await api.patch<AdminRoast>(`/admin/roasts/${id}/sharing`, { blocked });
+  return data;
 };

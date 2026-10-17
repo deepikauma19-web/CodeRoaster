@@ -112,6 +112,8 @@ class RoastResponse(BaseModel):
     error_message: str | None
     is_public: bool
     share_slug: str | None
+    secrets_detected: int = 0
+    share_blocked: bool = False
     created_at: datetime
     completed_at: datetime | None
 

@@ -46,6 +46,27 @@ class AdminUserUpdate(BaseModel):
     is_admin: bool | None = None
 
 
+class AdminReportResponse(BaseModel):
+    """A report filed against a public roast, with the roast's current sharing state."""
+
+    id: int
+    roast_id: int
+    repo_owner: str
+    repo_name: str
+    reason: str
+    details: str | None
+    is_public: bool
+    share_blocked: bool
+    report_count: int
+    created_at: datetime
+
+
+class SharingUpdate(BaseModel):
+    """Body for PATCH /admin/roasts/{id}/sharing."""
+
+    blocked: bool
+
+
 class AdminRoastResponse(BaseModel):
     """A roast (all owner-view fields) plus its owner's id and email."""
 
@@ -67,6 +88,7 @@ class AdminRoastResponse(BaseModel):
     error_message: str | None
     is_public: bool
     share_slug: str | None
+    share_blocked: bool = False
     created_at: datetime
     completed_at: datetime | None
     user_id: int

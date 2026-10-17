@@ -131,6 +131,7 @@ def reset_for_retry(db: Session, roast: Roast) -> Roast:
             summary=None,
             tips=[],
             files_analyzed=0,
+            secrets_detected=0,
             completed_at=None,
         )
         .execution_options(synchronize_session=False),

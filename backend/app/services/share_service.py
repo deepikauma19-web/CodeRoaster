@@ -1,5 +1,6 @@
 """Business logic for sharing roasts publicly: slugs, public lookups and OG share pages."""
 
+import hashlib
 import html
 import logging
 import re
@@ -8,17 +9,18 @@ import unicodedata
 from typing import Any
 from urllib.parse import quote
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
 from app.config import settings
 from app.exceptions import ConflictError, NotFoundError
-from app.models import Roast, RoastStatus, User
+from app.models import Roast, RoastReport, RoastStatus, User
 from app.schemas.public import (
     PublicRoastResponse,
     PublicScoreBreakdown,
     PublicTip,
+    ReportReason,
     ShareToggleResponse,
 )
 
@@ -144,7 +146,14 @@ def get_owned_roast(db: Session, roast_id: int, user: User) -> Roast:
 def set_sharing(db: Session, roast: Roast, is_public: bool) -> ShareToggleResponse:
     """Toggle public sharing. Generates a random slug on first enable; disabling keeps it."""
     if roast.status != RoastStatus.completed:
-        raise ConflictError("Roast innum ready aagala")
+        raise ConflictError("This roast is not ready yet")
+    if is_public and roast.share_blocked:
+        raise ConflictError("Sharing is disabled for this roast because it was reported.")
+    if is_public and roast.secrets_detected > 0:
+        raise ConflictError(
+            "This roast can't be shared because secrets were detected in the repo. "
+            "Remove them, then roast again."
+        )
 
     if is_public and roast.share_slug is None:
         roast_id = roast.id
@@ -205,6 +214,48 @@ def get_public_roast(db: Session, slug: str) -> Roast:
     if roast is None:
         raise NotFoundError("Roast not found")
     return roast
+
+
+def _reporter_hash(ip: str) -> str:
+    """Salted hash of the reporter's IP, so we can de-duplicate without storing the IP."""
+    return hashlib.sha256(f"{settings.SECRET_KEY}:{ip}".encode()).hexdigest()
+
+
+def report_roast(
+    db: Session, slug: str, reason: ReportReason, details: str | None, reporter_ip: str
+) -> None:
+    """
+    File a report against a public roast.
+
+    A reporter can report a roast once (repeat reports are silently ignored). Once
+    `REPORT_AUTO_UNPUBLISH_THRESHOLD` distinct reporters flag it, it is unpublished and
+    sharing is blocked until an admin reviews it.
+
+    Raises:
+        NotFoundError: if the roast is not public
+    """
+    roast = get_public_roast(db, slug)
+    cleaned = (details or "").strip()[:500] or None
+    db.add(
+        RoastReport(
+            roast_id=roast.id,
+            reason=reason,
+            details=cleaned,
+            reporter_hash=_reporter_hash(reporter_ip),
+        )
+    )
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        return
+    total = db.scalar(select(func.count(RoastReport.id)).where(RoastReport.roast_id == roast.id))
+    logger.info("Roast %s reported (%s), %s report(s) total", roast.id, reason, total)
+    if (total or 0) >= settings.REPORT_AUTO_UNPUBLISH_THRESHOLD:
+        roast.is_public = False
+        roast.share_blocked = True
+        db.commit()
+        logger.warning("Roast %s auto-unpublished after %s reports", roast.id, total)
 
 
 def _parse_tips(raw: list[dict[str, Any]] | None) -> list[PublicTip]:
@@ -295,6 +346,7 @@ def render_share_html(roast: Roast) -> str:
 <meta name="twitter:description" content="{d}">
 <meta name="twitter:image" content="{img}">
 <link rel="canonical" href="{url}">
+<meta name="robots" content="noindex, nofollow">
 <meta http-equiv="refresh" content="0;url={tgt}">
 <script>window.location.replace("{js_target}");</script>
 </head>

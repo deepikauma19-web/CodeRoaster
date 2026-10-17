@@ -1,6 +1,6 @@
 import api from './api';
 import type { PublicRoastResponse, ShareToggleRequest } from '../types/roast';
-import type { ShareToggleResult } from '../types/share';
+import type { ReportRoastPayload, ShareToggleResult } from '../types/share';
 
 /** PATCH /roasts/{id}/share — toggle public visibility (auth). 409 if not completed. */
 export const toggleRoastShare = async (roastId: number, isPublic: boolean): Promise<ShareToggleResult> => {
@@ -13,6 +13,11 @@ export const toggleRoastShare = async (roastId: number, isPublic: boolean): Prom
 export const getPublicRoast = async (shareSlug: string): Promise<PublicRoastResponse> => {
   const { data } = await api.get<PublicRoastResponse>(`/public/roasts/${encodeURIComponent(shareSlug)}`);
   return data;
+};
+
+/** POST /public/roasts/{slug}/report — flag a public roast (no auth). */
+export const reportPublicRoast = async (shareSlug: string, payload: ReportRoastPayload): Promise<void> => {
+  await api.post(`/public/roasts/${encodeURIComponent(shareSlug)}/report`, payload);
 };
 
 /** Backend OG-tag share page that redirects to /r/:slug — this is the URL people share. */

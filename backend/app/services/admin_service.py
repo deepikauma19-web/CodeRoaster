@@ -9,8 +9,9 @@ from sqlalchemy.orm import Session
 
 from app.auth.refresh_tokens import revoke_all_user_tokens
 from app.exceptions import ConflictError, NotFoundError
-from app.models import Roast, RoastIntensity, RoastStatus, User
+from app.models import Roast, RoastIntensity, RoastReport, RoastStatus, User
 from app.schemas.admin import (
+    AdminReportResponse,
     AdminRoastResponse,
     AdminStats,
     AdminUserResponse,
@@ -179,6 +180,56 @@ def delete_roast(db: Session, admin: User, roast_id: int) -> None:
     db.delete(roast)
     db.commit()
     logger.info("Admin %s deleted roast %s (owner user %s)", admin.id, roast_id, owner_id)
+
+
+def list_reports(db: Session, page: int, size: int) -> Page[AdminReportResponse]:
+    """List reports on shared roasts (newest first) with each roast's sharing state."""
+    counts = (
+        select(RoastReport.roast_id.label("roast_id"), func.count(RoastReport.id).label("n"))
+        .group_by(RoastReport.roast_id)
+        .subquery()
+    )
+    base = (
+        select(RoastReport, Roast, counts.c.n)
+        .join(Roast, Roast.id == RoastReport.roast_id)
+        .join(counts, counts.c.roast_id == RoastReport.roast_id)
+    )
+    total = _count(db, base)
+    stmt = (
+        base.order_by(RoastReport.created_at.desc(), RoastReport.id.desc())
+        .offset((page - 1) * size)
+        .limit(size)
+    )
+    items = [
+        AdminReportResponse(
+            id=report.id,
+            roast_id=roast.id,
+            repo_owner=roast.repo_owner,
+            repo_name=roast.repo_name,
+            reason=report.reason,
+            details=report.details,
+            is_public=roast.is_public,
+            share_blocked=roast.share_blocked,
+            report_count=int(n),
+            created_at=report.created_at,
+        )
+        for report, roast, n in db.execute(stmt).all()
+    ]
+    return Page[AdminReportResponse](items=items, total=total, page=page, size=size)
+
+
+def set_sharing_blocked(db: Session, admin: User, roast_id: int, blocked: bool) -> Roast:
+    """Block (and unpublish) or unblock sharing for a roast; the action is logged."""
+    roast = db.get(Roast, roast_id)
+    if roast is None:
+        raise NotFoundError("Roast not found")
+    roast.share_blocked = blocked
+    if blocked:
+        roast.is_public = False
+    db.commit()
+    db.refresh(roast)
+    logger.info("Admin %s set sharing_blocked=%s on roast %s", admin.id, blocked, roast_id)
+    return roast
 
 
 # --------------------------------------------------------------------------- stats

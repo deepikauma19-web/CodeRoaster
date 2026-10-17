@@ -77,7 +77,7 @@ function FailedState({ roast, onRetried, onDeleted }: FailedStateProps) {
     <GlassCard static borderColor="red.400" data-testid="roast-failed">
       <Stack spacing={4}>
         <Heading as="h2" size="md">
-          Roast fail aagiduchu 😵
+          The roast failed 😵
         </Heading>
         <Alert status="error" borderRadius="xl">
           <AlertIcon />
@@ -232,7 +232,7 @@ export default function RoastResultPage() {
 
       {!roast && !isLoading && !error && (
         <Box textAlign="center" py={10}>
-          <Text color="text.muted">Roast load aagala.</Text>
+          <Text color="text.muted">Could not load the roast.</Text>
         </Box>
       )}
     </PageWrapper>

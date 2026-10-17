@@ -26,7 +26,7 @@ const ERROR_MESSAGES: Record<CallbackErrorCode, { title: string; description: st
     description: "We couldn't complete Google sign-in. Please try again in a little while.",
   },
   account_deactivated: {
-    title: 'Account deactivate aagiduchu 🚫',
+    title: 'Account deactivated 🚫',
     description: 'Your account has been deactivated. Contact an admin if you think this is a mistake.',
   },
   missing_token: {

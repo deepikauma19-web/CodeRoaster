@@ -19,6 +19,7 @@ const AdminLayout = lazy(() => import('./components/layout/AdminLayout'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
 const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage'));
 const AdminRoastsPage = lazy(() => import('./pages/admin/AdminRoastsPage'));
+const AdminReportsPage = lazy(() => import('./pages/admin/AdminReportsPage'));
 
 function PageFallback() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
                     <Route index element={<AdminDashboardPage />} />
                     <Route path="users" element={<AdminUsersPage />} />
                     <Route path="roasts" element={<AdminRoastsPage />} />
+                    <Route path="reports" element={<AdminReportsPage />} />
                   </Route>
                 </Route>
               </Route>

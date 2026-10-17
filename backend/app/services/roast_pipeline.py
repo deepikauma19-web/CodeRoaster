@@ -95,6 +95,7 @@ async def _execute(db: Session, roast: Roast) -> None:
 
     signals = compute_signals([e.path for e in tree.entries if e.type == "blob"], fetched.files)
     roast.files_analyzed = len(fetched.files)
+    roast.secrets_detected = len(signals.secrets_found)
     _set_status(db, roast, RoastStatus.analyzing)
     logger.info(
         "Roast %s analysing %d files (truncated=%s, secrets=%d)",

@@ -41,6 +41,8 @@ export const makeRoast = (overrides: Partial<Roast> = {}): Roast => ({
   error_message: null,
   is_public: false,
   share_slug: null,
+  secrets_detected: 0,
+  share_blocked: false,
   created_at: '2026-10-01T10:00:00Z',
   completed_at: '2026-10-01T10:01:00Z',
   ...overrides,

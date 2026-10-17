@@ -13,3 +13,10 @@ export interface SharePlatformLink {
   label: string;
   href: string;
 }
+
+export type ReportReason = 'owner_request' | 'harassment' | 'secrets' | 'other';
+
+export interface ReportRoastPayload {
+  reason: ReportReason;
+  details?: string;
+}

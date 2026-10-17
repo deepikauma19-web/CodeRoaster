@@ -8,11 +8,13 @@ from sqlalchemy.orm import Session
 from app.dependencies import get_db, require_admin
 from app.models import RoastStatus, User
 from app.schemas.admin import (
+    AdminReportResponse,
     AdminRoastResponse,
     AdminStats,
     AdminUserResponse,
     AdminUserUpdate,
     Page,
+    SharingUpdate,
 )
 from app.services import admin_service
 
@@ -64,6 +66,29 @@ async def delete_roast(
     """Delete a roast. The deletion is logged with the acting admin's id."""
     admin_service.delete_roast(db, admin, roast_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.get("/reports", response_model=Page[AdminReportResponse])
+async def list_reports(
+    page: int = Query(default=1, ge=1),
+    size: int = Query(default=20, ge=1, le=100),
+    db: Session = Depends(get_db),
+) -> Page[AdminReportResponse]:
+    """Paginated reports filed against shared roasts (newest first)."""
+    return admin_service.list_reports(db, page, size)
+
+
+@router.patch("/roasts/{roast_id}/sharing", response_model=AdminRoastResponse)
+async def update_roast_sharing(
+    roast_id: int,
+    payload: SharingUpdate,
+    admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
+) -> AdminRoastResponse:
+    """Block (and unpublish) or unblock public sharing of a roast. The action is logged."""
+    roast = admin_service.set_sharing_blocked(db, admin, roast_id, payload.blocked)
+    owner = db.get(User, roast.user_id)
+    return AdminRoastResponse.from_row(roast, owner.email if owner else "")
 
 
 @router.get("/stats", response_model=AdminStats)

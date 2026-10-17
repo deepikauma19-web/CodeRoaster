@@ -27,7 +27,7 @@ export default function ProfilePage() {
     setLoggingOut(true);
     try {
       await logout();
-      toast({ title: 'Logged out. Seekiram vaa! 👋', status: 'success', duration: 3000 });
+      toast({ title: 'Logged out. Come back soon! 👋', status: 'success', duration: 3000 });
       navigate('/login', { replace: true });
     } finally {
       setLoggingOut(false);
