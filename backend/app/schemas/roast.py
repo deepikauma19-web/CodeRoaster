@@ -133,6 +133,15 @@ class RoastStatusResponse(BaseModel):
     error_message: str | None
 
 
+class RoastQuotaResponse(BaseModel):
+    """Daily roast allowance. `limit` and `remaining` are null when the user is unlimited."""
+
+    limit: int | None
+    used: int
+    remaining: int | None
+    resets_at: datetime | None
+
+
 class RoastListResponse(BaseModel):
     """Paginated list of the current user's roasts (newest first)."""
 
@@ -142,8 +151,32 @@ class RoastListResponse(BaseModel):
     size: int
 
 
+class LLMAnalysisOutput(BaseModel):
+    """Step 1 output (low temperature): summary, category scores and tips."""
+
+    summary: str = Field(..., min_length=1)
+    scores: ScoreBreakdown
+    tips: Annotated[list[Tip], Field(min_length=3, max_length=7)]
+
+    @field_validator("summary", mode="before")
+    @classmethod
+    def _clamp_summary(cls, value: Any) -> Any:
+        return _clamp(value, SUMMARY_MAX)
+
+
+class LLMRoastTextOutput(BaseModel):
+    """Step 2 output (high temperature): the roast text only."""
+
+    roast: str = Field(..., min_length=1)
+
+    @field_validator("roast", mode="before")
+    @classmethod
+    def _clamp_roast(cls, value: Any) -> Any:
+        return _clamp(value, ROAST_MAX)
+
+
 class LLMRoastOutput(BaseModel):
-    """Structured output expected from the LLM. Validated before anything is stored."""
+    """The combined, validated result of both steps. Validated before anything is stored."""
 
     summary: str = Field(..., min_length=1)
     roast: str = Field(..., min_length=1)

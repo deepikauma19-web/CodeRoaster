@@ -66,6 +66,10 @@ class Settings(BaseSettings):
     MAX_FILES_ANALYZED: int = 40
     MAX_TOTAL_CHARS: int = 120_000
 
+    # Fair use: roasts a user may start per rolling 24 hours (failed roasts are not counted,
+    # admins are exempt). 0 disables the limit.
+    DAILY_ROAST_LIMIT: int = 10
+
     # Moderation: a public roast is hidden once this many distinct reporters flag it.
     REPORT_AUTO_UNPUBLISH_THRESHOLD: int = 3
 

@@ -88,7 +88,8 @@ async def test_happy_path_records_status_transitions(
     assert roast.default_branch == "main"
     assert roast.commit_sha == "a" * 40
     assert roast.language_breakdown == {"Python": 90.0, "Shell": 10.0}
-    assert roast.prompt_tokens == 1234 and roast.completion_tokens == 567
+    # Two LLM calls (analysis + roast), each reporting 1234 / 567 tokens.
+    assert roast.prompt_tokens == 2 * 1234 and roast.completion_tokens == 2 * 567
     assert roast.model_used == "gpt-4o-mini-2024"
     assert roast.completed_at is not None
     assert roast.error_message is None
@@ -107,10 +108,12 @@ async def test_secrets_never_reach_llm_or_storage(
     )
     fake_openai.queue_json()
     await roast_pipeline.run_roast(pending.id)
-    sent = str(fake_openai.calls[0]["messages"])
-    assert OPENAI_KEY not in sent
-    assert '"env_file_committed": true' in sent
-    assert "sk-...wxyz" in sent
+    assert len(fake_openai.calls) == 2  # analysis + roast
+    for call in fake_openai.calls:
+        sent = str(call["messages"])
+        assert OPENAI_KEY not in sent
+        assert '"env_file_committed": true' in sent
+        assert "sk-...wxyz" in sent
     roast = _reload(db, pending.id)
     assert roast.status == RoastStatus.completed
 
@@ -204,7 +207,7 @@ async def test_run_roast_twice_runs_pipeline_once(
     fake_openai.queue_json()
     await asyncio.gather(roast_pipeline.run_roast(pending.id), roast_pipeline.run_roast(pending.id))
     await roast_pipeline.run_roast(pending.id)
-    assert len(fake_openai.calls) == 1
+    assert len(fake_openai.calls) == 2  # one pipeline run = analysis call + roast call
     roast = _reload(db, pending.id)
     assert roast.status == RoastStatus.completed and roast.error_message is None
 
@@ -281,6 +284,56 @@ async def test_openai_api_error_fails_with_friendly_message(
     mock_github_repo(respx_mock)
     fake_openai.queue(openai.APIConnectionError(request=httpx.Request("POST", "https://x")))
     await roast_pipeline.run_roast(pending.id)
+    roast = _reload(db, pending.id)
+    assert roast.status == RoastStatus.failed
+    assert roast.error_message == MSG_LLM_UNAVAILABLE
+
+
+def _status_error(
+    cls: type[openai.APIStatusError], status: int, code: str | None = None
+) -> openai.APIStatusError:
+    request = httpx.Request("POST", "https://api.openai.com/v1/chat/completions")
+    response = httpx.Response(status, request=request)
+    # The message deliberately contains a key-like string: it must never reach the logs.
+    body = {"message": "Incorrect API key provided: sk-proj-LEAKME", "code": code}
+    return cls("Incorrect API key provided: sk-proj-LEAKME", response=response, body=body)
+
+
+@pytest.mark.parametrize(
+    ("error", "expected"),
+    [
+        (_status_error(openai.AuthenticationError, 401, "invalid_api_key"), "check OPENAI_API_KEY"),
+        (_status_error(openai.PermissionDeniedError, 403), "permission denied (403)"),
+        (_status_error(openai.NotFoundError, 404, "model_not_found"), "check OPENAI_MODEL"),
+        (
+            _status_error(openai.RateLimitError, 429, "insufficient_quota"),
+            "out of credit (429 insufficient_quota)",
+        ),
+        (_status_error(openai.RateLimitError, 429, "rate_limit_exceeded"), "rate limited (429)"),
+        (
+            openai.APIConnectionError(request=httpx.Request("POST", "https://x")),
+            "cannot reach OpenAI",
+        ),
+        (_status_error(openai.InternalServerError, 500), "unexpected OpenAI error"),
+    ],
+)
+async def test_openai_failures_log_an_operator_hint_never_the_key(
+    db: Session,
+    pending: Roast,
+    respx_mock: respx.MockRouter,
+    fake_openai: FakeOpenAI,
+    caplog: pytest.LogCaptureFixture,
+    error: openai.OpenAIError,
+    expected: str,
+) -> None:
+    mock_github_repo(respx_mock)
+    fake_openai.queue(error)
+    with caplog.at_level("ERROR"):
+        await roast_pipeline.run_roast(pending.id)
+    assert expected in caplog.text
+    assert f"OpenAI {type(error).__name__}" in caplog.text
+    assert "LEAKME" not in caplog.text and "sk-proj" not in caplog.text
+    # Users still only ever see the generic message.
     roast = _reload(db, pending.id)
     assert roast.status == RoastStatus.failed
     assert roast.error_message == MSG_LLM_UNAVAILABLE

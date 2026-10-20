@@ -182,7 +182,7 @@ def test_retry_only_failed(
     roast = db.get(Roast, failed.id)
     assert roast is not None
     assert roast.status == RoastStatus.completed
-    assert roast.prompt_tokens == 15  # accumulated across attempts
+    assert roast.prompt_tokens == 20  # 10 before + 2 calls x 5 tokens, accumulated
     assert roast.intensity == RoastIntensity.mild
 
 

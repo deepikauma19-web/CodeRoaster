@@ -1,8 +1,8 @@
-"""LLM prompt templates: base prompt + one TONE block per roast intensity."""
+"""LLM prompt templates: an analysis prompt, and a roast prompt + one TONE block per intensity."""
 
 from app.models.roast import RoastIntensity
 from app.services.prompts import extra_spicy, medium, mild
-from app.services.prompts.base import BASE_PROMPT
+from app.services.prompts.base import ANALYSIS_PROMPT, BASE_PROMPT, ROAST_PROMPT
 
 TONES: dict[RoastIntensity, str] = {
     RoastIntensity.mild: mild.TONE,
@@ -11,9 +11,21 @@ TONES: dict[RoastIntensity, str] = {
 }
 
 
+def build_analysis_prompt() -> str:
+    """System prompt for the scoring/tips step. Identical for every intensity."""
+    return ANALYSIS_PROMPT
+
+
 def build_system_prompt(intensity: RoastIntensity) -> str:
-    """Base prompt (rubric, safety, injection guard) + the tone block for `intensity`."""
-    return f"{BASE_PROMPT}\n{TONES[RoastIntensity(intensity)]}"
+    """Roast prompt (guard, safety, roast rules) + the tone block for `intensity`."""
+    return f"{ROAST_PROMPT}\n{TONES[RoastIntensity(intensity)]}"
 
 
-__all__ = ["BASE_PROMPT", "TONES", "build_system_prompt"]
+__all__ = [
+    "ANALYSIS_PROMPT",
+    "BASE_PROMPT",
+    "ROAST_PROMPT",
+    "TONES",
+    "build_analysis_prompt",
+    "build_system_prompt",
+]

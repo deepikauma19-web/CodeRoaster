@@ -1,6 +1,6 @@
 import api from './api';
 import type { Paginated } from '../types/admin';
-import type { Roast, RoastCreate, RoastStatusResponse } from '../types/roast';
+import type { Roast, RoastCreate, RoastQuota, RoastStatusResponse } from '../types/roast';
 
 export interface ListRoastsParams {
   page?: number;
@@ -10,6 +10,12 @@ export interface ListRoastsParams {
 /** POST /roasts → 202 with the queued roast. */
 export const createRoast = async (payload: RoastCreate): Promise<Roast> => {
   const { data } = await api.post<Roast>('/roasts', payload);
+  return data;
+};
+
+/** GET /roasts/quota → roasts left in the rolling 24-hour window. */
+export const getRoastQuota = async (): Promise<RoastQuota> => {
+  const { data } = await api.get<RoastQuota>('/roasts/quota');
   return data;
 };
 

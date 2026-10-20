@@ -243,6 +243,7 @@ cd frontend && npm install && npm run dev
 | `OPENAI_API_KEY` / `OPENAI_MODEL` | OpenAI access and model |
 | `GITHUB_TOKEN` | Optional. Raises the GitHub rate limit from 60 to 5000 requests/hour |
 | `MAX_FILES_ANALYZED` / `MAX_TOTAL_CHARS` | Caps on what is sent to the model |
+| `DAILY_ROAST_LIMIT` | Roasts per user per rolling 24 hours (default 10, `0` = unlimited, admins exempt) |
 
 **Never commit a real `.env`.** See `.env.example` and `.env.production.example`.
 

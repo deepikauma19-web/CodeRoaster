@@ -1,8 +1,9 @@
-import { Alert, AlertDescription, AlertIcon, Box, Divider, Flex, FormLabel, Heading, Stack, Text, chakra } from '@chakra-ui/react';
+import { Alert, AlertDescription, AlertIcon, Box, Divider, FormLabel, Heading, Stack, Text, chakra } from '@chakra-ui/react';
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlassCard, PageWrapper } from '../components/ui';
 import { IntensityPicker, RecentRoasts, RepoUrlInput, RoastMeButton } from '../components/roast';
+import { useRoastQuota } from '../hooks/useRoastQuota';
 import { DEFAULT_INTENSITY, isValidRepoUrl } from '../lib/roastUi';
 import { getErrorMessage } from '../services/api';
 import { createRoast } from '../services/roastApi';
@@ -10,8 +11,18 @@ import type { RoastIntensity } from '../types/roast';
 
 const INVALID_URL_MESSAGE = 'Enter a valid GitHub repo URL, e.g. https://github.com/owner/repo';
 
+const formatReset = (iso: string | null): string => {
+  if (!iso) return 'later today';
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime())
+    ? 'later today'
+    : date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+};
+
 export default function NewRoastPage() {
   const navigate = useNavigate();
+  const { quota, refresh: refreshQuota } = useRoastQuota();
+  const outOfRoasts = quota?.remaining === 0;
   const [repoUrl, setRepoUrl] = useState<string>('');
   const [intensity, setIntensity] = useState<RoastIntensity>(DEFAULT_INTENSITY);
   const [urlError, setUrlError] = useState<string | null>(null);
@@ -41,7 +52,7 @@ export default function NewRoastPage() {
     setTouched(true);
     const validation = validate(repoUrl);
     setUrlError(validation);
-    if (validation) return;
+    if (validation || outOfRoasts) return;
 
     setIsSubmitting(true);
     setServerError(null);
@@ -51,6 +62,7 @@ export default function NewRoastPage() {
     } catch (err: unknown) {
       setServerError(getErrorMessage(err));
       setIsSubmitting(false);
+      void refreshQuota();
     }
   };
 
@@ -94,9 +106,24 @@ export default function NewRoastPage() {
               </Alert>
             )}
 
-            <Flex justify="center">
-              <RoastMeButton isLoading={isSubmitting} />
-            </Flex>
+            {outOfRoasts && (
+              <Alert status="warning" borderRadius="xl" data-testid="quota-exhausted">
+                <AlertIcon />
+                <AlertDescription>
+                  You have used all {quota?.limit} roasts for today. Your next one is available around{' '}
+                  {formatReset(quota?.resets_at ?? null)}.
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <Stack align="center" spacing={2}>
+              <RoastMeButton isLoading={isSubmitting} isDisabled={outOfRoasts} />
+              {quota?.remaining != null && quota.remaining > 0 && (
+                <Text fontSize="sm" color="text.muted" data-testid="quota-remaining">
+                  {quota.remaining} of {quota.limit} roasts left today
+                </Text>
+              )}
+            </Stack>
           </Stack>
         </chakra.form>
       </GlassCard>

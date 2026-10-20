@@ -3,17 +3,19 @@ import userEvent from '@testing-library/user-event';
 import { Route } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import NewRoastPage from '../pages/NewRoastPage';
-import { createRoast, listRoasts } from '../services/roastApi';
+import { createRoast, getRoastQuota, listRoasts } from '../services/roastApi';
 import { authedValue, axiosError, makeRoast } from './utils/fixtures';
 import { renderWithProviders } from './utils/renderWithProviders';
 
 vi.mock('../services/roastApi', () => ({
   createRoast: vi.fn(),
   listRoasts: vi.fn(),
+  getRoastQuota: vi.fn(),
 }));
 
 const mockCreate = vi.mocked(createRoast);
 const mockList = vi.mocked(listRoasts);
+const mockQuota = vi.mocked(getRoastQuota);
 
 const renderPage = () =>
   renderWithProviders(<NewRoastPage />, {
@@ -29,6 +31,8 @@ describe('NewRoastPage', () => {
   beforeEach(() => {
     mockCreate.mockReset();
     mockList.mockReset();
+    mockQuota.mockReset();
+    mockQuota.mockResolvedValue({ limit: 10, used: 3, remaining: 7, resets_at: null });
     mockList.mockResolvedValue({ items: [], total: 0, page: 1, size: 5 });
   });
 
@@ -118,5 +122,50 @@ describe('NewRoastPage', () => {
     mockList.mockRejectedValue(axiosError(500, { detail: 'list failed' }));
     renderPage();
     expect(await screen.findByText('list failed')).toBeInTheDocument();
+  });
+
+  it('shows how many roasts are left today', async () => {
+    renderPage();
+    expect(await screen.findByTestId('quota-remaining')).toHaveTextContent('7 of 10 roasts left today');
+    expect(screen.queryByTestId('quota-exhausted')).not.toBeInTheDocument();
+  });
+
+  it('hides the counter for unlimited users', async () => {
+    mockQuota.mockResolvedValue({ limit: null, used: 4, remaining: null, resets_at: null });
+    renderPage();
+    await waitFor(() => expect(mockQuota).toHaveBeenCalled());
+    expect(screen.queryByTestId('quota-remaining')).not.toBeInTheDocument();
+    expect(submitButton()).toBeEnabled();
+  });
+
+  it('disables the button and explains when the daily limit is used up', async () => {
+    mockQuota.mockResolvedValue({
+      limit: 10,
+      used: 10,
+      remaining: 0,
+      resets_at: '2026-10-19T08:30:00Z',
+    });
+    renderPage();
+    expect(await screen.findByTestId('quota-exhausted')).toHaveTextContent(/used all 10 roasts for today/);
+    expect(submitButton()).toBeDisabled();
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it('keeps working when the quota request fails', async () => {
+    mockQuota.mockRejectedValue(axiosError(500, { detail: 'boom' }));
+    renderPage();
+    await waitFor(() => expect(mockQuota).toHaveBeenCalled());
+    expect(submitButton()).toBeEnabled();
+    expect(screen.queryByTestId('quota-remaining')).not.toBeInTheDocument();
+  });
+
+  it('shows the server message and refreshes the allowance on a 429', async () => {
+    const user = userEvent.setup();
+    mockCreate.mockRejectedValue(axiosError(429, { detail: 'You have used all 10 roasts for today.' }));
+    renderPage();
+    await user.type(urlInput(), 'https://github.com/octo/hello');
+    await user.click(submitButton());
+    expect(await screen.findByTestId('server-error')).toHaveTextContent(/used all 10 roasts/);
+    await waitFor(() => expect(mockQuota).toHaveBeenCalledTimes(2));
   });
 });

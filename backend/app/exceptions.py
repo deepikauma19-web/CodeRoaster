@@ -51,13 +51,29 @@ class UnprocessableError(AppError):
     default_detail = "Unprocessable entity"
 
 
+class TooManyRequestsError(AppError):
+    """429 with a `Retry-After` header (seconds)."""
+
+    status_code = 429
+    default_detail = "Too many requests"
+
+    def __init__(self, detail: str | None = None, retry_after: int | None = None) -> None:
+        super().__init__(detail)
+        self.retry_after = retry_after
+
+
 async def app_error_handler(request: Request, exc: Exception) -> JSONResponse:
     """Render an AppError as {"detail": ...}."""
     if not isinstance(exc, AppError):  # pragma: no cover - defensive
         raise exc
     if exc.status_code >= 500:
         logger.error("AppError on %s %s: %s", request.method, request.url.path, exc.detail)
-    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+    headers: dict[str, str] = {}
+    if isinstance(exc, TooManyRequestsError) and exc.retry_after is not None:
+        headers["Retry-After"] = str(max(1, exc.retry_after))
+    return JSONResponse(
+        status_code=exc.status_code, content={"detail": exc.detail}, headers=headers or None
+    )
 
 
 def register_exception_handlers(app: FastAPI) -> None:

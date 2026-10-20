@@ -8,9 +8,15 @@ from app.auth.jwt import decode_access_token
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.exceptions import AppError, BadRequestError
-from app.models import User
+from app.models import RoastStatus, User
 from app.rate_limit import limiter
-from app.schemas.roast import RoastCreate, RoastListResponse, RoastResponse, RoastStatusResponse
+from app.schemas.roast import (
+    RoastCreate,
+    RoastListResponse,
+    RoastQuotaResponse,
+    RoastResponse,
+    RoastStatusResponse,
+)
 from app.services import roast_service
 from app.services.github_service import InvalidRepoUrlError, normalize_repo_url, parse_repo_url
 from app.services.roast_pipeline import run_roast
@@ -47,6 +53,7 @@ async def create_roast(
         owner, repo = parse_repo_url(payload.repo_url)
     except InvalidRepoUrlError as exc:
         raise BadRequestError(exc.message) from exc
+    roast_service.enforce_daily_quota(db, user)
     roast = roast_service.create_roast(
         db, user, owner, repo, normalize_repo_url(owner, repo), payload.intensity
     )
@@ -65,6 +72,18 @@ async def list_roasts(
     items, total = roast_service.list_user_roasts(db, user.id, page, size)
     return RoastListResponse(
         items=[RoastResponse.model_validate(r) for r in items], total=total, page=page, size=size
+    )
+
+
+@router.get("/quota", response_model=RoastQuotaResponse)
+async def get_roast_quota(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+) -> RoastQuotaResponse:
+    """How many roasts the current user has left in the rolling 24-hour window."""
+    quota = roast_service.get_roast_quota(db, user)
+    return RoastQuotaResponse(
+        limit=quota.limit, used=quota.used, remaining=quota.remaining, resets_at=quota.resets_at
     )
 
 
@@ -101,6 +120,8 @@ async def retry_roast(
 ) -> RoastResponse:
     """Re-queue a failed roast (409 if it is not failed)."""
     roast = roast_service.get_user_roast(db, roast_id, user.id)
+    if roast.status == RoastStatus.failed:
+        roast_service.enforce_daily_quota(db, user)
     roast = roast_service.reset_for_retry(db, roast)
     background_tasks.add_task(run_roast, roast.id)
     return RoastResponse.model_validate(roast)

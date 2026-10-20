@@ -235,7 +235,7 @@ def sample_tips(n: int = 3) -> list[dict[str, Any]]:
             "title": f"Tip {i}",
             "description": f"Do thing {i} properly.",
             "priority": ["high", "medium", "low"][i % 3],
-            "file_path": "main.py" if i % 2 == 0 else None,
+            "file_path": "README.md" if i % 2 == 0 else None,
         }
         for i in range(n)
     ]
@@ -247,9 +247,7 @@ def sample_tips(n: int = 3) -> list[dict[str, Any]]:
 def llm_payload(**overrides: Any) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "summary": "Solid-ish beginner repo with gaps.",
-        "roast": (
-            "Bro, a bare `pass` in a try-except in `main.py` won't fix the bug, it will hide it!"
-        ),
+        "roast": ("Bro, a bare `pass` inside a try-except won't fix the bug, it will hide it!"),
         "scores": {
             "code_quality": 12,
             "structure": 10,
@@ -294,7 +292,14 @@ class FakeOpenAI:
         return self
 
     def queue_json(self, payload: dict[str, Any] | None = None, **kw: Any) -> "FakeOpenAI":
-        return self.queue(make_completion(json.dumps(payload or llm_payload()), **kw))
+        """Queue the two replies of one roast: the analysis call, then the roast-text call.
+        `kw` (token counts, model) applies to each of the two completions."""
+        full = payload or llm_payload()
+        analysis = {key: full[key] for key in ("summary", "scores", "tips")}
+        return self.queue(
+            make_completion(json.dumps(analysis), **kw),
+            make_completion(json.dumps({"roast": full["roast"]}), **kw),
+        )
 
     async def _create(self, **kwargs: Any) -> Any:
         self.calls.append(kwargs)

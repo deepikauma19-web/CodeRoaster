@@ -189,7 +189,10 @@ const fetchRoast = async (id: number): Promise<Roast> => {
 - Each roast includes 3–7 tips, each with a priority
 - Analysis runs as a background task. `POST /roasts` returns 202 immediately.
 - Respect the file and size caps (`MAX_FILES_ANALYZED`, `MAX_TOTAL_CHARS`) before calling the LLM.
+- Daily quota: each user may start `DAILY_ROAST_LIMIT` roasts per rolling 24 hours (failed roasts are not counted, admins are exempt, 0 disables). Creating or retrying a roast over the limit returns 429 with `Retry-After`. `GET /api/v1/roasts/quota` reports the allowance.
 - Record `model_used`, `prompt_tokens`, and `completion_tokens` on every roast.
+- A roast makes two LLM calls: an **analysis** call (summary, 5 scores, tips; low temperature) and a **roast** call (text only; high temperature) that receives the finished verdict. Intensity only affects the second call, so tone can never change scores. Token counts are summed across both calls.
+- File paths cited by tips and the roast are validated against the repo tree (`services/citations.py`). A bad citation gets one corrective retry; tip paths that stay wrong become `null`; a roast that still cites a missing file is kept and a warning is logged. Conventional files (README, .gitignore, ...) may be cited as missing.
 
 ### Roast Tone & Content Rules (LLM prompts)
 - Write the roast in **plain English** with a human, funny voice (e.g. "There is no README. How exactly will you explain this in an interview?").
@@ -207,6 +210,7 @@ const fetchRoast = async (id: number): Promise<Roast> => {
 - Shared pages and public endpoints are unlisted: always send `X-Robots-Tag: noindex, nofollow` (and the robots meta on HTML pages).
 - Public roasts can be reported (`POST /api/v1/public/roasts/{slug}/report`). Store only a salted IP hash. At `REPORT_AUTO_UNPUBLISH_THRESHOLD` distinct reports the roast is unpublished and `share_blocked` is set. Only an admin can lift the block.
 - Admin sharing blocks and unblocks must be logged.
+- Shared roasts expose a README badge at `/api/v1/public/roasts/{slug}/badge.svg`. It contains only the score and a fixed band label, never repo or user text, and 404s unless the roast is public.
 
 ### Admin Module
 - All `/api/v1/admin/*` routes require the `require_admin` dependency.
@@ -275,6 +279,7 @@ GITHUB_TOKEN=
 # Analysis limits
 MAX_FILES_ANALYZED=40
 MAX_TOTAL_CHARS=120000
+DAILY_ROAST_LIMIT=10
 
 # URLs
 FRONTEND_URL=http://localhost:5173

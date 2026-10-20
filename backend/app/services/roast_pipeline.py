@@ -34,6 +34,26 @@ SessionFactory = Callable[[], Session]
 session_factory: SessionFactory = SessionLocal
 
 
+def openai_error_hint(exc: openai.OpenAIError) -> str:
+    """
+    Operator-facing explanation of an OpenAI failure, for logs only (users always get the
+    generic MSG_LLM_UNAVAILABLE). Never include `str(exc)`: OpenAI echoes part of the key.
+    """
+    if isinstance(exc, openai.AuthenticationError):
+        return "API key rejected (401): check OPENAI_API_KEY"
+    if isinstance(exc, openai.PermissionDeniedError):
+        return "permission denied (403): the key or project cannot use this model or region"
+    if isinstance(exc, openai.NotFoundError):
+        return "model not found (404): check OPENAI_MODEL"
+    if isinstance(exc, openai.RateLimitError):
+        if getattr(exc, "code", None) == "insufficient_quota":
+            return "out of credit (429 insufficient_quota): check OpenAI billing"
+        return "rate limited (429): too many requests, will clear on its own"
+    if isinstance(exc, openai.APIConnectionError):  # includes APITimeoutError
+        return "cannot reach OpenAI (network error or timeout)"
+    return "unexpected OpenAI error"
+
+
 def _set_status(db: Session, roast: Roast, status: RoastStatus) -> None:
     roast.status = status
     db.commit()
@@ -93,7 +113,8 @@ async def _execute(db: Session, roast: Roast) -> None:
     capped = github_service.count_selectable(candidates) > len(selected)
     truncated = tree.truncated or capped or fetched.truncated
 
-    signals = compute_signals([e.path for e in tree.entries if e.type == "blob"], fetched.files)
+    blob_paths = [e.path for e in tree.entries if e.type == "blob"]
+    signals = compute_signals(blob_paths, fetched.files)
     roast.files_analyzed = len(fetched.files)
     roast.secrets_detected = len(signals.secrets_found)
     _set_status(db, roast, RoastStatus.analyzing)
@@ -110,6 +131,7 @@ async def _execute(db: Session, roast: Roast) -> None:
         signals,
         roast.intensity,
         language_breakdown=meta.language_breakdown or None,
+        known_paths=blob_paths,
     )
 
     output = result.output
@@ -178,7 +200,12 @@ async def run_roast(roast_id: int) -> None:
             logger.warning("Roast %s failed: %s", roast_id, exc.log_detail)
             _mark_failed(db, roast_id, exc.user_message)
         except openai.OpenAIError as exc:
-            logger.error("Roast %s failed: OpenAI error %s", roast_id, type(exc).__name__)
+            logger.error(
+                "Roast %s failed: OpenAI %s - %s",
+                roast_id,
+                type(exc).__name__,
+                openai_error_hint(exc),
+            )
             _mark_failed(db, roast_id, MSG_LLM_UNAVAILABLE)
         except Exception:
             logger.exception("Roast %s failed with an unexpected error", roast_id)

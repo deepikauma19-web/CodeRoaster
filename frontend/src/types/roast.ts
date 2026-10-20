@@ -53,6 +53,15 @@ export interface Roast {
   completed_at: string | null;
 }
 
+export interface RoastQuota {
+  /** null = unlimited (admins, or the limit is switched off). */
+  limit: number | null;
+  used: number;
+  remaining: number | null;
+  /** When one more roast becomes available; null if the user is not at the limit. */
+  resets_at: string | null;
+}
+
 export type RoastResponse = Roast;
 
 export interface RoastStatusResponse {
