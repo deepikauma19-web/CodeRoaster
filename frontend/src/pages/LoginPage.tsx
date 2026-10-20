@@ -116,6 +116,7 @@ export default function LoginPage() {
             alignSelf="flex-start"
             colorScheme="brand"
             variant="solid"
+            color="ink.500"
             px={3}
             py={1}
             borderRadius="full"

@@ -30,11 +30,11 @@ const ERROR_MESSAGES: Record<CallbackErrorCode, { title: string; description: st
     description: 'Your account has been deactivated. Contact an admin if you think this is a mistake.',
   },
   missing_token: {
-    title: 'Login details kaanom 🤔',
+    title: 'Login details missing 🤔',
     description: 'No login token was found in the callback. Please sign in again.',
   },
   unknown: {
-    title: 'Edho thappa poachu 😬',
+    title: 'Something went wrong 😬',
     description: 'Something went wrong while signing you in. Please try again.',
   },
 };

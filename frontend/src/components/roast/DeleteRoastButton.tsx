@@ -32,7 +32,7 @@ export function DeleteRoastButton({ roastId, onDeleted, ...rest }: DeleteRoastBu
     try {
       await deleteRoast(roastId);
       onClose();
-      toast({ status: 'success', title: 'Roast delete aachu.', duration: 3000 });
+      toast({ status: 'success', title: 'Roast deleted.', duration: 3000 });
       onDeleted();
     } catch (err: unknown) {
       toast({ status: 'error', title: 'Could not delete the roast', description: getErrorMessage(err), duration: 5000 });

@@ -24,7 +24,7 @@ vi.mock('../services/authService', async (importOriginal) => {
 });
 
 vi.mock('../services/adminApi', () => ({ getAdminStats: vi.fn() }));
-vi.mock('../services/roastApi', () => ({ listRoasts: vi.fn() }));
+vi.mock('../services/roastApi', () => ({ listRoasts: vi.fn(), getRoastQuota: vi.fn() }));
 
 const renderAt = (path: string) =>
   render(
@@ -107,7 +107,7 @@ describe('ErrorBoundary', () => {
         </ErrorBoundary>
       </ChakraProvider>,
     );
-    expect(screen.getByRole('heading', { name: /Aiyo, edho thappa poachu/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Oops, something went wrong/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Reload' })).toBeInTheDocument();
     spy.mockRestore();
   });

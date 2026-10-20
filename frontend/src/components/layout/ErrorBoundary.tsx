@@ -30,7 +30,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (this.state.error) {
       return (
         <Stack align="center" justify="center" minH="100vh" spacing={4} px={4} textAlign="center">
-          <Heading size="lg">Aiyo, edho thappa poachu 😵</Heading>
+          <Heading size="lg">Oops, something went wrong 😵</Heading>
           <Text color="text.muted">Something broke. It was probably not your code this time. Please reload the page.</Text>
           <Button onClick={this.handleReload}>Reload</Button>
         </Stack>

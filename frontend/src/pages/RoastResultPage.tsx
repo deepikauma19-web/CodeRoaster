@@ -120,7 +120,7 @@ function CompletedState({ roast, onRoastChange, onDeleted }: CompletedStateProps
           {roast.score_breakdown ? (
             <ScoreBreakdownBars breakdown={roast.score_breakdown} />
           ) : (
-            <Text color="text.muted">Breakdown kidaikkala.</Text>
+            <Text color="text.muted">No score breakdown available.</Text>
           )}
         </GlassCard>
       </SimpleGrid>
@@ -154,7 +154,7 @@ function CompletedState({ roast, onRoastChange, onDeleted }: CompletedStateProps
 
       <Flex justify="space-between" gap={3} wrap="wrap">
         <Button as={RouterLink} to="/roast/new" variant="outline">
-          Innoru roast 🔥
+          Roast another 🔥
         </Button>
         <DeleteRoastButton roastId={roast.id} onDeleted={onDeleted} />
       </Flex>

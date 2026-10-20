@@ -168,8 +168,8 @@ describe('AuthCallbackPage', () => {
 
   it.each([
     ['#error=invalid_state', /Session timed out/],
-    ['#error=something_weird', /Edho thappa poachu/],
-    ['', /Login details kaanom/],
+    ['#error=something_weird', /Something went wrong/],
+    ['', /Login details missing/],
   ])('hash %j shows an error with Try again', async (hash, title) => {
     const user = userEvent.setup();
     window.history.replaceState(null, '', `/auth/callback${hash}`);
