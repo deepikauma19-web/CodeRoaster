@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.rate_limit import limiter
 from app.schemas.public import PublicRoastResponse, RoastReportCreate, RoastReportResponse
-from app.services import card_service, share_service
+from app.services import badge_service, card_service, share_service
 
 # Shared roasts are unlisted: reachable by link, never offered to search engines.
 NOINDEX = {"X-Robots-Tag": "noindex, nofollow"}
@@ -56,6 +56,32 @@ async def get_roast_card(
     )
 
 
+@router.get(
+    "/roasts/{share_slug}/badge.svg",
+    response_class=Response,
+    responses={200: {"content": {"image/svg+xml": {}}}},
+)
+@limiter.limit("600/minute")  # GitHub's image proxy shares a few IPs across many READMEs
+async def get_roast_badge(
+    request: Request,
+    share_slug: str,
+    db: Session = Depends(get_db),
+) -> Response:
+    """README badge ("code roasted | 72/100") for a shared roast; 404 unless public."""
+    roast = share_service.get_public_roast(db, share_slug)
+    svg = badge_service.render_badge_svg(roast.overall_score or 0)
+    return Response(
+        content=svg,
+        media_type="image/svg+xml",
+        headers={
+            "Cache-Control": "public, max-age=3600",
+            "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
+            "X-Content-Type-Options": "nosniff",
+            **NOINDEX,
+        },
+    )
+
+
 @router.get("/share/{share_slug}", response_class=HTMLResponse)
 @limiter.limit("60/minute")
 async def get_share_page(
@@ -66,9 +92,7 @@ async def get_share_page(
     """OG-tagged HTML for social crawlers; redirects browsers to the SPA's /r/{slug}."""
     roast = share_service.find_public_roast(db, share_slug)
     if roast is None:
-        return HTMLResponse(
-            share_service.render_not_found_html(), status_code=404, headers=NOINDEX
-        )
+        return HTMLResponse(share_service.render_not_found_html(), status_code=404, headers=NOINDEX)
     return HTMLResponse(
         share_service.render_share_html(roast),
         headers={"Cache-Control": "public, max-age=300", **NOINDEX},

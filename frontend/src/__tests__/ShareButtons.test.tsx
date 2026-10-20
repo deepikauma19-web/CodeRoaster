@@ -15,6 +15,8 @@ vi.mock('../services/shareApi', async (importOriginal) => {
 
 const mockToggle = vi.mocked(toggleRoastShare);
 const SHARE_URL = 'http://localhost:8000/api/v1/public/share/abc123';
+// Absolute links use VITE_API_URL when set, otherwise the page origin.
+const ORIGIN = import.meta.env.VITE_API_URL || window.location.origin;
 
 function Harness({ initial, onRoastChange }: { initial: Roast; onRoastChange: (r: Roast) => void }) {
   const [roast, setRoast] = useState<Roast>(initial);
@@ -126,5 +128,29 @@ describe('ShareButtons', () => {
     );
     expect(toggle()).toBeDisabled();
     expect(screen.getByTestId('share-blocked')).toHaveTextContent(/was reported/);
+  });
+
+  it('shows a README badge preview and markdown once the roast is public', () => {
+    renderWithChakra(
+      <Harness
+        initial={makeRoast({ id: 9, is_public: true, share_slug: 'abc123' })}
+        onRoastChange={vi.fn()}
+      />,
+    );
+    const snippet = screen.getByTestId('badge-snippet');
+    expect(snippet).toHaveTextContent('README badge');
+    const markdown = screen.getByLabelText('Badge markdown') as HTMLInputElement;
+    expect(markdown.value).toBe(
+      `[![Code Roaster score](${ORIGIN}/api/v1/public/roasts/abc123/badge.svg)](${ORIGIN}/api/v1/public/share/abc123)`,
+    );
+    expect(screen.getByAltText('Code Roaster score badge')).toHaveAttribute(
+      'src',
+      `${ORIGIN}/api/v1/public/roasts/abc123/badge.svg`,
+    );
+  });
+
+  it('does not show the badge while the roast is private', () => {
+    renderWithChakra(<Harness initial={makeRoast({ is_public: false })} onRoastChange={vi.fn()} />);
+    expect(screen.queryByTestId('badge-snippet')).not.toBeInTheDocument();
   });
 });

@@ -23,6 +23,7 @@ import { getErrorMessage } from '../../services/api';
 import { buildShareUrl, toggleRoastShare } from '../../services/shareApi';
 import type { Roast } from '../../types/roast';
 import type { SharePlatform } from '../../types/share';
+import { BadgeSnippet } from './BadgeSnippet';
 import { buildPlatformLinks, buildShareText, copyWithClipboardApi } from './shareLinks';
 
 interface ShareButtonsProps {
@@ -178,6 +179,8 @@ export function ShareButtons({ roast, onRoastChange }: ShareButtonsProps): JSX.E
               );
             })}
           </Wrap>
+
+          {roast.share_slug && <BadgeSnippet shareSlug={roast.share_slug} shareUrl={shareUrl} />}
         </Stack>
       ) : shareDisabled ? (
         <HStack spacing={2} color="text.muted" align="flex-start" data-testid="share-blocked">

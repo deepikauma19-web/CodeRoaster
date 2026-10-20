@@ -20,6 +20,17 @@ export const reportPublicRoast = async (shareSlug: string, payload: ReportRoastP
   await api.post(`/public/roasts/${encodeURIComponent(shareSlug)}/report`, payload);
 };
 
+/** Absolute API origin. Links that leave the app (READMEs, social posts) must never be relative. */
+const apiOrigin = (): string => import.meta.env.VITE_API_URL || window.location.origin;
+
+/** Public SVG score badge for a shared roast, for embedding in a README. */
+export const buildBadgeUrl = (shareSlug: string): string =>
+  `${apiOrigin()}/api/v1/public/roasts/${encodeURIComponent(shareSlug)}/badge.svg`;
+
+/** Markdown snippet: the badge image linking to the shared roast. */
+export const buildBadgeMarkdown = (shareSlug: string, shareUrl: string): string =>
+  `[![Code Roaster score](${buildBadgeUrl(shareSlug)})](${shareUrl})`;
+
 /** Backend OG-tag share page that redirects to /r/:slug — this is the URL people share. */
 export const buildShareUrl = (shareSlug: string): string =>
-  `${import.meta.env.VITE_API_URL ?? ''}/api/v1/public/share/${encodeURIComponent(shareSlug)}`;
+  `${apiOrigin()}/api/v1/public/share/${encodeURIComponent(shareSlug)}`;
